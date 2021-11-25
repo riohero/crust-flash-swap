@@ -1,5 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import * as _ from 'lodash';
+import { Subscription } from 'rxjs';
 import { ERC20__factory } from 'src/typechain/factories/ERC20__factory';
 import { WalletService } from '../wallet.service';
 
@@ -53,7 +61,7 @@ const TradeMarkets: Market[] = [
   templateUrl: './flash-swap.component.html',
   styleUrls: ['./flash-swap.component.scss'],
 })
-export class FlashSwapComponent implements OnInit {
+export class FlashSwapComponent implements OnInit, OnDestroy {
   @Input() assets: CryptoAsset[] = [];
   @Input() selectedAsset: CryptoAsset | null = null;
   @Output() itemSelected = new EventEmitter<CryptoAsset>();
@@ -61,10 +69,12 @@ export class FlashSwapComponent implements OnInit {
   account: string | null = null;
   markets = TradeMarkets;
 
+  subAccount = new Subscription();
+
   constructor(private wallet: WalletService) {}
 
   ngOnInit(): void {
-    this.wallet.getAccountObs().subscribe(
+    this.subAccount = this.wallet.getAccountObs().subscribe(
       (accts) => {
         this.account = _.isEmpty(accts) ? null : accts[0];
       },
@@ -72,6 +82,10 @@ export class FlashSwapComponent implements OnInit {
         console.error('error getting account', e);
       }
     );
+  }
+
+  ngOnDestroy(): void {
+    this.subAccount.unsubscribe();
   }
 
   public selectItem(item: CryptoAsset): void {
