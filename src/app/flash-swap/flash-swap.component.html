@@ -1,6 +1,11 @@
 <div class="f-row hr">
   <div class="header">
-    Quickly Get CRU <a class="link-primary swft-link" href="https://www.swft.pro/" target="_blank">Powered By SWFT</a>
+    <div>Quickly Get CRU <a class="link-primary swft-link" href="https://www.swft.pro/" target="_blank">Powered By
+        SWFT</a></div>
+    <div class="account" *ngIf="isConnected()" [ngbTooltip]="getConnectedAddress()" placement="bottom">
+      <img class="wallet-name" src="assets/metamask.svg">
+      <span class="wallet-address">{{getShortAddress()}}</span>
+    </div>
   </div>
 </div>
 <div class="f-row">
@@ -44,7 +49,9 @@
           placeholder="Please enter the receiving address">
       </div>
     </div>
-    <button class="btn btn-primary btn-connect">Connect MetaMask</button>
+    <button class="btn btn-primary btn-connect" *ngIf="!isConnected()" (click)="connectWallet()">Connect
+      MetaMask</button>
+    <button class="btn btn-primary btn-connect" *ngIf="isConnected()">Swap</button>
   </div>
 </div>
 <div class="f-row footer">

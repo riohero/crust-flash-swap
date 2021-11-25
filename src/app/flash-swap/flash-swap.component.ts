@@ -1,4 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import * as _ from 'lodash';
+import { ERC20__factory } from 'src/typechain/factories/ERC20__factory';
+import { WalletService } from '../wallet.service';
 
 const CRU: CryptoAsset = {
   symbol: 'CRU',
@@ -50,17 +53,54 @@ const TradeMarkets: Market[] = [
   templateUrl: './flash-swap.component.html',
   styleUrls: ['./flash-swap.component.scss'],
 })
-export class FlashSwapComponent {
+export class FlashSwapComponent implements OnInit {
   @Input() assets: CryptoAsset[] = [];
   @Input() selectedAsset: CryptoAsset | null = null;
   @Output() itemSelected = new EventEmitter<CryptoAsset>();
   cru = CRU;
-
+  account: string | null = null;
   markets = TradeMarkets;
 
-  constructor() {}
+  constructor(private wallet: WalletService) {}
+
+  ngOnInit(): void {
+    this.wallet.getAccountObs().subscribe(
+      (accts) => {
+        this.account = _.isEmpty(accts) ? null : accts[0];
+      },
+      (e) => {
+        console.error('error getting account', e);
+      }
+    );
+  }
 
   public selectItem(item: CryptoAsset): void {
     this.itemSelected.emit(item);
+  }
+
+  public isConnected(): boolean {
+    return this.account !== null && this.account.length > 0;
+  }
+
+  public getConnectedAddress(): string | null {
+    return this.account;
+  }
+
+  public getShortAddress(): string | null {
+    const addr = this.getConnectedAddress();
+    if (!addr) {
+      return null;
+    }
+
+    return addr.substring(0, 5) + '...' + addr.substring(addr.length - 5);
+  }
+
+  public connectWallet(): void {
+    this.wallet.connectWallet().subscribe(
+      () => {},
+      (e) => {
+        console.log('error connecting to wallet');
+      }
+    );
   }
 }
