@@ -1,12 +1,60 @@
 <div class="f-row hr">
   <div class="header">
-    Quickly Get CRU <a class="swft-link" href="https://www.swft.pro/" target="_blank">Powered By SWFT</a>
+    Quickly Get CRU <a class="link-primary swft-link" href="https://www.swft.pro/" target="_blank">Powered By SWFT</a>
   </div>
 </div>
 <div class="f-row">
   <div class="content">
-    hahahah
-    dd
-    ddd
+    <label for="swap-from-amount" class="input-label">From</label>
+    <div class="f-row">
+      <div class="input-group">
+        <input id="swap-from-amount" type="number" class="form-control" aria-label="From Amount" placeholder="0">
+        <div ngbDropdown class="input-group-append">
+          <a [routerLink]="" class="btn btn-outline-primary selected-asset" id="fromTokenDropDown" ngbDropdownToggle>
+            <img [src]="selectedAsset?.imageUrl" class="asset-icon">
+            <span class="asset-name"> {{selectedAsset?.symbol}}</span>
+          </a>
+          <div ngbDropdownMenu class="dropdown-menu asset-list">
+            <a *ngFor="let a of assets" class="dropdown-item" [routerLink]="" (click)="selectItem(a)">
+              <img [src]="a.imageUrl" class="asset-icon">
+              {{a.symbol}}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <label for="swap-to-amount" class="input-label to-label">To</label>
+    <div class="f-row">
+      <div class="input-group">
+        <input id="swap-to-amount" [disabled]="true" type="number" class="form-control" aria-label="To Amount"
+          placeholder="0">
+        <div ngbDropdown class="input-group-append">
+          <a [routerLink]="" class="btn btn-outline-primary disabled selected-asset" id="toTokenDropDown"
+            ngbDropdownToggle>
+            <img [src]="cru.imageUrl" class="asset-icon">
+            <span class="asset-name"> {{cru.symbol}}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <label class="lbl-mainnet" for="cruAddress"> Crust Mainnet Address (Receiving CRU) </label>
+    <div class="f-row ">
+      <div class="f-row">
+        <input type="text" class="form-control to-address" id="cruAddress" aria-describedby="crust address"
+          placeholder="Please enter the receiving address">
+      </div>
+    </div>
+    <button class="btn btn-primary btn-connect">Connect MetaMask</button>
+  </div>
+</div>
+<div class="f-row footer">
+  <div class="footer-content">
+    Trade on Markets:
+    <div class="markets">
+      <a class="market" *ngFor="let market of markets" [href]="market.url" target="_blank">
+        <img class="market-icon" [src]="market.imageUrl">
+        <span class="market-name">{{market.name}}</span>
+      </a>
+    </div>
   </div>
 </div>

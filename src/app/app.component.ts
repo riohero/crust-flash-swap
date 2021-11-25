@@ -1,5 +1,22 @@
 import { Component } from '@angular/core';
 
+const defaultAssets: CryptoAsset[] = [{
+  symbol: 'ETH',
+  imageUrl: '/assets/ETH.png',
+  chainId: 1,
+  network: 'ethereum',
+}, {
+  symbol: 'USDT',
+  imageUrl: '/assets/USDT.png',
+  chainId: 1,
+  network: 'ethereum',
+}, {
+  symbol: 'USDC',
+  imageUrl: '/assets/USDC.png',
+  chainId: 1,
+  network: 'ethereum',
+}]
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -7,4 +24,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'crust-flash-swap';
+  assets = defaultAssets
+  selectedAsset = defaultAssets[0]
+
+  public setSelectedAsset(asset: CryptoAsset): void {
+    this.selectedAsset = asset
+  }
 }
