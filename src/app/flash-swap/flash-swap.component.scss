@@ -1,0 +1,47 @@
+:host {
+  width: 720px;
+  display: flex;
+
+  background: #F1F1F1;
+  border-radius: 8px;
+  align-items: flex-start;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.f-row {
+  flex: 0 0 100%;
+  display: flex;
+
+  &.hr {
+    border-bottom: 1px solid rgba(34, 36, 38, .15);
+  }
+
+}
+
+.header {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 25px;
+  margin: 1em;
+
+  .swft-link {
+    padding-left: 0.5em;
+    font-weight: normal;
+  }
+}
+
+a {
+  color: #FF8D00;
+}
+
+.content {
+  margin: 24px;
+  padding: 24px;
+  min-height: 300px;
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+}
