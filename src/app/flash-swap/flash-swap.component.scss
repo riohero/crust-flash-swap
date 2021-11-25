@@ -31,10 +31,16 @@
   }
 
   .account {
+    display: flex;
     max-width: 15em;
     font-size: 18px;
     font-weight: normal;
     line-height: 25px;
+    align-items: center;
+
+    img {
+      margin-bottom: 1px;
+    }
     .wallet-name {
       width: 18px;
       height: 18px;
