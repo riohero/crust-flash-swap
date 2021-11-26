@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ethers } from 'ethers';
 import * as _ from 'lodash';
 import { from, interval, Observable } from 'rxjs';
-import { filter, finalize, switchMap } from 'rxjs/operators';
+import { filter, finalize, share, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +17,8 @@ export class WalletService {
     this.provider = new ethers.providers.Web3Provider((window as any).ethereum);
     this.accounts$ = interval(500).pipe(
       filter(() => !this.pendingCommands), // skip update when there're pending commands
-      switchMap(() => from(this.provider.listAccounts().catch((e) => [])))
+      switchMap(() => from(this.provider.listAccounts().catch((e) => []))),
+      share()
     );
   }
 

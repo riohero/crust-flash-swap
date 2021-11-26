@@ -51,5 +51,8 @@
     "karma-jasmine-html-reporter": "~1.7.0",
     "typechain": "^6.0.4",
     "typescript": "~4.3.5"
+  },
+  "volta": {
+    "node": "16.13.0"
   }
 }
