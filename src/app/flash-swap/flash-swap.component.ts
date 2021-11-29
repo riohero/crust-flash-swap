@@ -32,7 +32,7 @@ const defaultAssets: CryptoAsset[] = [
 ];
 
 const CRU: CryptoAsset = {
-  symbol: 'USDT',
+  symbol: 'USDT(ERC20)',
   network: 'ETH',
   // chainId: 0,
   contract: '0xdac17f958d2ee523a2206206994597c13d831ec7',
@@ -97,13 +97,13 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
   toAddress = new FormControl('');
   toAmount = 0;
   selectAssetSubject$ = new Subject<CryptoAsset>();
-  subAccount$ = new Subscription();
-  subFromAmount$ = new Subscription();
-  subCoinList$ = new Subscription();
+  fromAmountSubject$ = new Subject<number | null>();
   errors: { [k: string]: boolean } = {};
 
   priceInfo?: PriceInfo;
   loadPriceError = false;
+
+  subs$: Subscription[] = [];
 
   constructor(
     private wallet: WalletService,
@@ -112,7 +112,7 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.subAccount$ = this.wallet.getAccountObs().subscribe(
+    const subAccount$ = this.wallet.getAccountObs().subscribe(
       (accts) => {
         this.account = _.isEmpty(accts) ? null : accts[0];
       },
@@ -120,17 +120,20 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
         console.error('error getting account', e);
       }
     );
+    this.subs$.push(subAccount$);
 
-    this.subFromAmount$ = this.fromAmount.valueChanges
+    const subFromAmount$ = this.fromAmount.valueChanges
       .pipe(distinctUntilChanged(), debounceTime(50))
       .subscribe((v) => {
         if (v > 0) {
           this.errors = _.omit(this.errors, 'fromAmount');
         }
         console.log('v ', v);
+        this.fromAmountSubject$.next(v);
       });
+    this.subs$.push(subFromAmount$);
 
-    this.subCoinList$ = this.swft.getCoinList().subscribe(
+    const subCoinList$ = this.swft.getCoinList().subscribe(
       (result) => {
         if (result.resCode !== '800') {
           this.coinListLoadStatus = 'error';
@@ -165,7 +168,9 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.toAddress.valueChanges
+    this.subs$.push(subCoinList$);
+
+    const subAddr$ = this.toAddress.valueChanges
       .pipe(distinctUntilChanged(), debounceTime(50))
       .subscribe(
         (v) => {
@@ -177,11 +182,12 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
           console.error('failed handle value changes', e);
         }
       );
+    this.subs$.push(subAddr$);
 
-    this.selectAssetSubject$
+    const subAsset$ = this.selectAssetSubject$
       .asObservable()
       .pipe(
-        combineLatest(this.fromAmount.valueChanges),
+        combineLatest(this.fromAmountSubject$.asObservable()),
         distinctUntilChanged(),
         debounceTime(50)
       )
@@ -191,7 +197,12 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
         switchMap(([[assetSelected, fromAmount]]) => {
           return this.swft
             .getPriceInfo(assetSelected, this.cru)
-            .pipe(map((v) => [v, fromAmount]));
+            .pipe(
+              map(
+                (v) =>
+                  [v, fromAmount] as [SwftResponse<PriceInfo>, number | null]
+              )
+            );
         })
       )
       .subscribe(
@@ -203,7 +214,7 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
           this.loadPriceError = false;
           this.priceInfo = result.data;
           this.toAmount = this.swft.getReturnAmount(
-            fromAmount,
+            fromAmount || 0,
             this.priceInfo!
           );
           // console.log('asset, amount, to', this.priceInfo, this.toAmount);
@@ -213,13 +224,15 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
         }
       );
 
+    this.subs$.push(subAsset$);
+
     this.selectAssetSubject$.next(this.selectedAsset);
+    this.fromAmountSubject$.next(0);
   }
 
   ngOnDestroy(): void {
-    this.subAccount$.unsubscribe();
-    this.subFromAmount$.unsubscribe();
-    this.subCoinList$.unsubscribe();
+    this.subs$.forEach((v) => v.unsubscribe());
+    this.subs$ = [];
   }
 
   public selectItem(item: CryptoAsset): void {
