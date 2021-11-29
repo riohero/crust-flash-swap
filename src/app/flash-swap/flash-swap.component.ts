@@ -160,6 +160,7 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
             };
           })
           .filter()
+          .sortBy((v) => v?.symbol)
           .value() as CryptoAsset[];
         const eth = _.find(this.fromCoinList, (c) => c.symbol === 'ETH');
         this.selectItem(eth ? eth : this.fromCoinList[0]);
