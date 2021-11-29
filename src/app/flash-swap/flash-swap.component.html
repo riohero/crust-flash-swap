@@ -50,17 +50,30 @@
           aria-describedby="crust address" placeholder="Please enter the receiving address"
           [class.is-invalid]="errors.toAddress">
       </div>
-      <div class="f-row price-info" *ngIf="priceInfo">
+      <div class="f-row price-info">
         <label class="price-label">Price:</label>
-        <label class="price">{{priceInfo!.instantRate | number:'1.1-6' }} {{simplified(cru.symbol)}} per
-          {{selectedAsset.symbol}}</label>
+        <label class="price" *ngIf="priceInfo">
+          {{priceInfo!.instantRate | number:'1.1-6' }} {{simplified(cru.symbol)}}
+        </label>
+        <label class="price" *ngIf="!priceInfo">
+          <i class="loading" src="/assets/spinner-1s.svg"></i>
+          {{simplified(cru.symbol)}}
+        </label>
       </div>
-      <div class="f-row price-info fee-info" *ngIf="priceInfo">
+      <div class="f-row price-info fee-info">
         <label class="price-label">Fee:</label>
-        <label class="price">{{priceInfo!.depositCoinFeeRate | percent:'1.1-6'}}（in {{simplified(selectedAsset.symbol)
+        <label class="price" *ngIf="priceInfo">{{priceInfo!.depositCoinFeeRate | percent:'1.1-6'}}（in
+          {{simplified(selectedAsset.symbol)
           }}）</label>
+        <label class="price" *ngIf="!priceInfo">
+          <i class="loading" src="/assets/spinner-1s.svg"></i>
+          （in {{simplified(selectedAsset.symbol) }}）</label>
         <label class="price-label">Receive Fee:</label>
-        <label class="price">{{priceInfo!.receiveCoinFee | number:'1.1-6'}}（in {{simplified(cru.symbol)}}）</label>
+        <label class="price" *ngIf="priceInfo">{{priceInfo!.receiveCoinFee | number:'1.1-6'}}（in
+          {{simplified(cru.symbol)}}）</label>
+        <label class="price" *ngIf="!priceInfo">
+          <i class="loading" src="/assets/spinner-1s.svg"></i>
+          （in {{simplified(cru.symbol)}}）</label>
       </div>
     </div>
     <button class="btn btn-primary btn-connect" *ngIf="!isConnected()" (click)="connectWallet()">Connect

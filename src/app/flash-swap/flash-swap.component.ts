@@ -227,9 +227,6 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
 
     this.subs$.push(subAsset$);
 
-    this.selectAssetSubject$.next(this.selectedAsset);
-    this.fromAmountSubject$.next(0);
-
     const subSelectedAsset$ = this.selectAssetSubject$
       .asObservable()
       .pipe(
@@ -243,6 +240,9 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
         () => {}
       );
     this.subs$.push(subSelectedAsset$);
+
+    this.selectAssetSubject$.next(this.selectedAsset);
+    this.fromAmountSubject$.next(0);
   }
 
   ngOnDestroy(): void {

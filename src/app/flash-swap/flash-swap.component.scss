@@ -125,7 +125,7 @@
 }
 
 .btn-connect {
-  margin-top: 1.5em;
+  margin-top: 1em;
   width: 100%;
   background: white;
   color: #ff8d00;
@@ -198,11 +198,22 @@
 
     .price-label {
       color: #000;
+      margin-right: 0.2em;
     }
     .price {
+      display: inline-flex;
+      min-width: 6em;
       margin-left: 0.2em;
       color: #ff8d00;
       margin-right: 0.5em;
     }
   }
+}
+
+.loading {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-image: url("/assets/spinner-1s.svg");
+  background-size: cover;
 }
