@@ -1,8 +1,11 @@
+type SupportedNetwork = 'ETH' | 'crust';
+
 interface CryptoAsset {
-  imageUrl: string;
   symbol: string;
-  network: string;
-  chainId: number;
+  network: SupportedNetwork;
+  // chainId: number;
+  contract?: string;
+  decimal: number;
 }
 
 interface Market {

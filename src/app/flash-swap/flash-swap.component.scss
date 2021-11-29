@@ -78,7 +78,7 @@
 .selected-asset {
   .asset-name {
     display: inline-block;
-    min-width: 3em;
+    min-width: 5.5em;
   }
 
   .asset-icon {
@@ -89,7 +89,9 @@
 }
 
 .asset-list {
-  min-width: 8em;
+  min-width: 10em;
+  max-height: 300px;
+  overflow-y: auto;
   .dropdown-item {
     padding: 0.4em 1em;
   }
