@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import * as _ from 'lodash';
-import { interval, Subject, Subscription } from 'rxjs';
+import { interval, Subject, Subscription, timer } from 'rxjs';
 import {
   combineLatest,
   debounceTime,
@@ -100,7 +100,7 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
   fromAmountSubject$ = new Subject<number | null>();
   errors: { [k: string]: boolean } = {};
 
-  priceInfo?: PriceInfo;
+  priceInfo?: NormalizedPriceInfo;
   loadPriceError = false;
 
   subs$: Subscription[] = [];
@@ -161,7 +161,8 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
           })
           .filter()
           .value() as CryptoAsset[];
-        this.selectItem(this.fromCoinList[0]);
+        const eth = _.find(this.fromCoinList, (c) => c.symbol === 'ETH');
+        this.selectItem(eth ? eth : this.fromCoinList[0]);
       },
       () => {
         this.coinListLoadStatus = 'error';
@@ -191,7 +192,7 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         debounceTime(50)
       )
-      .pipe(combineLatest(interval(10 * 1000))) // 每10秒更新一次报价
+      .pipe(combineLatest(timer(0, 10 * 1000))) // 每10秒更新一次报价
       .pipe(
         tap(() => (this.loadPriceError = false)),
         switchMap(([[assetSelected, fromAmount]]) => {
@@ -212,7 +213,7 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
             return;
           }
           this.loadPriceError = false;
-          this.priceInfo = result.data;
+          this.priceInfo = this.swft.normalziePriceInfo(result.data);
           this.toAmount = this.swft.getReturnAmount(
             fromAmount || 0,
             this.priceInfo!
@@ -228,6 +229,20 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
 
     this.selectAssetSubject$.next(this.selectedAsset);
     this.fromAmountSubject$.next(0);
+
+    const subSelectedAsset$ = this.selectAssetSubject$
+      .asObservable()
+      .pipe(
+        map((v) => v.symbol),
+        distinctUntilChanged()
+      )
+      .subscribe(
+        () => {
+          this.priceInfo = undefined;
+        },
+        () => {}
+      );
+    this.subs$.push(subSelectedAsset$);
   }
 
   ngOnDestroy(): void {
@@ -287,5 +302,9 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
 
   private isToAddressValid(addr: string): boolean {
     return this.keyring.isAddressValid(addr);
+  }
+
+  public simplified(s: string): string {
+    return s.replace(/\(.*\)/g, '');
   }
 }

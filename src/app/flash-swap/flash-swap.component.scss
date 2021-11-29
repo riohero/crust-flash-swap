@@ -183,3 +183,26 @@
     }
   }
 }
+
+.receiving-info {
+  flex-direction: column;
+
+  .price-info {
+    margin-top: 1em;
+    font-size: 14px;
+    line-height: 19px;
+
+    &.fee-info {
+      margin-top: 0;
+    }
+
+    .price-label {
+      color: #000;
+    }
+    .price {
+      margin-left: 0.2em;
+      color: #ff8d00;
+      margin-right: 0.5em;
+    }
+  }
+}

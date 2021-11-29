@@ -30,3 +30,12 @@ interface PriceInfo {
   minerFee: string;
   receiveCoinFee: string;
 }
+
+interface NormalizedPriceInfo {
+  depositMax: number;
+  depositMin: number;
+  depositCoinFeeRate: number;
+  instantRate: number;
+  minerFee: number;
+  receiveCoinFee: number;
+}

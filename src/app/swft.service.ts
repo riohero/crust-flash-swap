@@ -46,10 +46,27 @@ export class SwftService {
     );
   }
 
-  public getReturnAmount(fromAmount: number, price: PriceInfo): number {
+  public normalziePriceInfo(price: PriceInfo): NormalizedPriceInfo {
     const depositFeeRate = Number(price.depositCoinFeeRate);
     const instantRate = Number(price.instantRate);
     const receiveCoinFee = Number(price.receiveCoinFee);
+    return {
+      depositMax: Number(price.depositMax),
+      depositMin: Number(price.depositMin),
+      depositCoinFeeRate: depositFeeRate,
+      instantRate,
+      receiveCoinFee,
+      minerFee: Number(price.minerFee),
+    };
+  }
+
+  public getReturnAmount(
+    fromAmount: number,
+    price: NormalizedPriceInfo
+  ): number {
+    const depositFeeRate = price.depositCoinFeeRate;
+    const instantRate = price.instantRate;
+    const receiveCoinFee = price.receiveCoinFee;
     const received =
       fromAmount * (1 - depositFeeRate) * instantRate - receiveCoinFee;
     if (received < 0) {

@@ -44,11 +44,23 @@
       </div>
     </div>
     <label class="lbl-mainnet" for="cruAddress"> Crust Mainnet Address (Receiving CRU) </label>
-    <div class="f-row ">
+    <div class="f-row receiving-info">
       <div class="f-row">
         <input type="text" class="form-control to-address" id="cruAddress" [formControl]="toAddress"
           aria-describedby="crust address" placeholder="Please enter the receiving address"
           [class.is-invalid]="errors.toAddress">
+      </div>
+      <div class="f-row price-info" *ngIf="priceInfo">
+        <label class="price-label">Price:</label>
+        <label class="price">{{priceInfo!.instantRate | number:'1.1-6' }} {{simplified(cru.symbol)}} per
+          {{selectedAsset.symbol}}</label>
+      </div>
+      <div class="f-row price-info fee-info" *ngIf="priceInfo">
+        <label class="price-label">Fee:</label>
+        <label class="price">{{priceInfo!.depositCoinFeeRate | percent:'1.1-6'}}（in {{simplified(selectedAsset.symbol)
+          }}）</label>
+        <label class="price-label">Receive Fee:</label>
+        <label class="price">{{priceInfo!.receiveCoinFee | number:'1.1-6'}}（in {{simplified(cru.symbol)}}）</label>
       </div>
     </div>
     <button class="btn btn-primary btn-connect" *ngIf="!isConnected()" (click)="connectWallet()">Connect
