@@ -11,7 +11,7 @@ export class KeyringService {
 
   public isAddressValid(addr: string): boolean {
     try {
-      const a = this.keyring.decodeAddress(addr);
+      const a = this.keyring.decodeAddress(addr, false, 66);
       return !!a;
     } catch (e) {
       return false;
