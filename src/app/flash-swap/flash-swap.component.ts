@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import * as _ from 'lodash';
+import { ToastrService } from 'ngx-toastr';
 import { from, Observable, Subject, Subscription, timer } from 'rxjs';
 import {
   combineLatest,
@@ -114,7 +115,8 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
     private wallet: WalletService,
     private swft: SwftService,
     private keyring: KeyringService,
-    private appState: AppStateService
+    private appState: AppStateService,
+    private toast: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -304,6 +306,10 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
     }
     if (!this.toAddress.value || !this.isToAddressValid(this.toAddress.value)) {
       this.errors['toAddress'] = true;
+      this.toast.warning(
+        'Please enter an valid receiving address',
+        'Receiving Address Required'
+      );
     }
     if (!this.priceInfo) {
       this.errors['price'] = true;
@@ -361,7 +367,14 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
         (r) => {
           console.log('result: ', r);
         },
-        (e) => {
+        (e: any) => {
+          if (e.code === -32000) {
+            this.toast.error(
+              'Failed to send transaction, please check your input and the balance'
+            );
+          } else if (e.code === 4001) {
+            this.toast.info('Transaction Cancelled');
+          }
           console.error('error creating order', e);
         }
       );
