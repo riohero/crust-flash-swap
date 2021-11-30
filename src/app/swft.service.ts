@@ -17,13 +17,15 @@ export class SwftService {
   private apiUrl(api: string): string {
     return `${SwftBase}/${api}`;
   }
+
+  private request<T>(api: string, body: object): Observable<SwftResponse<T>> {
+    return this.http.post<SwftResponse<T>>(this.apiUrl(api), body);
+  }
+
   public getCoinList(): Observable<SwftResponse<CoinInfo[]>> {
-    return this.http.post<SwftResponse<CoinInfo[]>>(
-      this.apiUrl('api/v1/queryCoinList'),
-      {
-        supportType: 'advanced',
-      }
-    );
+    return this.request<CoinInfo[]>('api/v1/queryCoinList', {
+      supportType: 'advanced',
+    });
   }
 
   public getSupportedTokens(
@@ -37,13 +39,10 @@ export class SwftService {
     from: CryptoAsset,
     to: CryptoAsset
   ): Observable<SwftResponse<PriceInfo>> {
-    return this.http.post<SwftResponse<PriceInfo>>(
-      this.apiUrl('api/v1/getBaseInfo'),
-      {
-        depositCoinCode: from.symbol,
-        receiveCoinCode: to.symbol,
-      }
-    );
+    return this.request<PriceInfo>('api/v1/getBaseInfo', {
+      depositCoinCode: from.symbol,
+      receiveCoinCode: to.symbol,
+    });
   }
 
   public normalziePriceInfo(price: PriceInfo): NormalizedPriceInfo {
@@ -73,5 +72,11 @@ export class SwftService {
       return 0;
     }
     return _.floor(received, 6);
+  }
+
+  public createOrder(
+    payload: CreateOrderPayload
+  ): Observable<SwftResponse<CreateOrderResult>> {
+    return this.request<CreateOrderResult>('api/v2/accountExchange', payload);
   }
 }

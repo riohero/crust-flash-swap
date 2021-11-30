@@ -8,16 +8,19 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import * as _ from 'lodash';
-import { interval, Subject, Subscription, timer } from 'rxjs';
+import { from, Observable, Subject, Subscription, timer } from 'rxjs';
 import {
   combineLatest,
   debounceTime,
   distinctUntilChanged,
+  finalize,
   map,
+  mergeMap,
   switchMap,
   tap,
 } from 'rxjs/operators';
 import { ERC20__factory } from 'src/typechain/factories/ERC20__factory';
+import { AppStateService } from '../app-state.service';
 import { KeyringService } from '../keyring.service';
 import { SwftService } from '../swft.service';
 import { WalletService } from '../wallet.service';
@@ -104,11 +107,14 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
   loadPriceError = false;
 
   subs$: Subscription[] = [];
+  subSwap$: Subscription = new Subscription();
+  swapInProgress: boolean = false;
 
   constructor(
     private wallet: WalletService,
     private swft: SwftService,
-    private keyring: KeyringService
+    private keyring: KeyringService,
+    private appState: AppStateService
   ) {}
 
   ngOnInit(): void {
@@ -155,7 +161,7 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
             return {
               symbol: v.coinCode,
               network: v.mainNetwork,
-              contract: v.contract || '',
+              contract: v.contact || '',
               decimal: v.coinDecimal,
             };
           })
@@ -249,6 +255,7 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subs$.forEach((v) => v.unsubscribe());
     this.subs$ = [];
+    this.subSwap$.unsubscribe();
   }
 
   public selectItem(item: CryptoAsset): void {
@@ -288,6 +295,9 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
   }
 
   public doSwap(): void {
+    if (this.swapInProgress) {
+      return;
+    }
     this.errors = {};
     if (!this.fromAmount.value || this.fromAmount.value <= 0) {
       this.errors['fromAmount'] = true;
@@ -297,8 +307,64 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
     }
     if (!this.priceInfo) {
       this.errors['price'] = true;
+    }
+    if (!_.isEmpty(this.errors) || !this.priceInfo || !this.account) {
       return;
     }
+
+    const deviceId = this.appState.getDeviceId();
+    console.debug('using device id: ', deviceId);
+    const receiveCoinAmt = this.fromAmount.value * this.priceInfo!.instantRate;
+    this.swapInProgress = true;
+    this.subSwap$ = this.swft
+      .createOrder({
+        depositCoinAmt: `${this.fromAmount.value}`,
+        depositCoinCode: this.selectedAsset.symbol,
+        receiveCoinCode: this.cru.symbol,
+        receiveCoinAmt: `${receiveCoinAmt}`,
+        destinationAddr: this.toAddress.value,
+        refundAddr: this.account!,
+        equipmentNo: deviceId,
+        sourceType: 'H5',
+        sourceFlag: 'Crust',
+      })
+      .pipe(
+        mergeMap((v) => {
+          if (v.resCode !== '800') {
+            return from([
+              {
+                success: false,
+                reason: 'failed',
+              },
+            ]);
+          }
+          const orderResult = v.data;
+          if (this.selectedAsset.symbol !== orderResult.depositCoinCode) {
+            return from([
+              {
+                success: false,
+                reason: 'ui-changed',
+              },
+            ]);
+          }
+          return from(
+            this.wallet.composeSend(
+              this.selectedAsset,
+              orderResult.platformAddr,
+              Number(orderResult.depositCoinAmt)
+            )
+          );
+        })
+      )
+      .pipe(finalize(() => (this.swapInProgress = false)))
+      .subscribe(
+        (r) => {
+          console.log('result: ', r);
+        },
+        (e) => {
+          console.error('error creating order', e);
+        }
+      );
   }
 
   private isToAddressValid(addr: string): boolean {
@@ -307,5 +373,12 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
 
   public simplified(s: string): string {
     return s.replace(/\(.*\)/g, '');
+  }
+
+  public getSwapButtonText() {
+    if (this.swapInProgress) {
+      return 'Swapping...';
+    }
+    return 'Swap';
   }
 }

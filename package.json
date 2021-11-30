@@ -17,6 +17,7 @@
     "@angular/router": "~12.2.0",
     "@ng-bootstrap/ng-bootstrap": "^10.0.0",
     "@polkadot/keyring": "^8.0.2",
+    "bignumber.js": "^9.0.1",
     "bootstrap": "^4.6.1",
     "ethers": "^5.5.1",
     "lodash": "^4.17.21",

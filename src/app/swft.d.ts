@@ -10,7 +10,7 @@ type Network = 'ETH' | 'BSC';
 interface CoinInfo {
   coinId: string;
   coinName: string;
-  contract: string;
+  contact: string;
   coinCode: string;
   coinDecimal: number;
   coinAllCode: string;
@@ -38,4 +38,44 @@ interface NormalizedPriceInfo {
   instantRate: number;
   minerFee: number;
   receiveCoinFee: number;
+}
+
+type SourceType = 'Android' | 'IOS' | 'H5';
+interface CreateOrderPayload {
+  depositCoinCode: string;
+  depositCoinAmt: string;
+  receiveCoinCode: string;
+  receiveCoinAmt: string;
+  destinationAddr: string;
+  refundAddr: string;
+  equipmentNo: string;
+  sourceType: SourceType;
+  sourceFlag: 'Crust';
+}
+
+type OrderStatus =
+  | 'wait_deposit_send'
+  | 'timeout'
+  | 'wait_exchange_push'
+  | 'wait_exchange_return'
+  | 'wait_receive_send'
+  | 'wait_refund_send'
+  | 'error'
+  | 'ERROR'
+  | 'WAIT_KYC';
+
+interface CreateOrderResult {
+  orderId: string;
+  createTime: string;
+  dealFinishTime: string | null;
+  depositCoinAmt: string;
+  depositCoinCode: string;
+  platformAddr: string; // send asset to this address
+  detailState: OrderStatus;
+}
+
+interface OrderResult extends CreateOrderResult {
+  transactionId: string;
+  refundDepositTxid: string;
+  refundCoinAmt: string;
 }
