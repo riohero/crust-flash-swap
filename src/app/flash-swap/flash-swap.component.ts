@@ -296,6 +296,15 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
     return `https://www.swftc.info/swft-v3/images/coins/${a.symbol}.png`;
   }
 
+  public isValidAmount(amount: number): boolean {
+    if (!this.priceInfo) {
+      return false;
+    }
+    const min = Number(this.priceInfo.depositMin);
+    const max = Number(this.priceInfo.depositMax);
+    return amount >= min && amount <= max;
+  }
+
   public doSwap(): void {
     if (this.swapInProgress) {
       return;
@@ -303,11 +312,23 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
     this.errors = {};
     if (!this.fromAmount.value || this.fromAmount.value <= 0) {
       this.errors['fromAmount'] = true;
+    } else if (!this.isValidAmount(this.fromAmount.value)) {
+      if (this.priceInfo) {
+        this.toast.error(
+          `Amount out of range, accepted amount range: ${
+            this.priceInfo.depositMin
+          } - ${this.priceInfo.depositMax} ${this.simplified(
+            this.selectedAsset.symbol
+          )}`,
+          'Invalid amount'
+        );
+      }
+      return;
     }
     if (!this.toAddress.value || !this.isToAddressValid(this.toAddress.value)) {
       this.errors['toAddress'] = true;
       this.toast.warning(
-        'Please enter an valid receiving address',
+        'Please enter a valid receiving address',
         'Receiving Address Required'
       );
     }

@@ -11,10 +11,12 @@ body {
 
 @import "~ngx-toastr/toastr-bs4-alert";
 
-.overlay-container {
-  .toast-container {
-    .ngx-toastr {
-      width: 350px;
+.toast-container {
+  .ngx-toastr {
+    width: 350px !important;
+
+    .toast-message {
+      width: 300px !important;
     }
   }
 }
