@@ -459,7 +459,6 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
   }
 
   public showOrderHistory() {
-    console.log('show history...');
     const modalRef = this.modalService.open(OrderHistoryComponent, {
       size: 'lg',
     });

@@ -13,8 +13,8 @@
     <thead>
       <tr>
         <th scope="col">Order ID</th>
-        <th scope="col">From Token</th>
-        <th scope="col">To Token</th>
+        <th scope="col">From</th>
+        <th scope="col">To</th>
         <th scope="col">Amount</th>
         <th scope="col">Status</th>
       </tr>
@@ -23,8 +23,8 @@
       <tr *ngFor="let order of orders">
         <th scope="row" [ngbTooltip]="order.orderId" container="body" placement="bottom">
           {{getShortOrderId(order.orderId)}}</th>
-        <td>{{order.fromToken}}</td>
-        <td>{{order.toToken}}</td>
+        <td class="token-name">{{order.fromToken}}</td>
+        <td class="token-name">{{order.toToken}}</td>
         <td>{{order.amount | number:'1.1-6'}} {{order.fromToken}}</td>
         <td class="col-status">
           <img class="loading" *ngIf="!orderDetails[order.orderId]" src="/assets/spinner-dark.svg">
