@@ -2,4 +2,5 @@ export const environment = {
   production: true,
   swftApiUrl: 'https://www.swftc.info',
   skipToAddressCheck: false,
+  checkIp: true,
 };

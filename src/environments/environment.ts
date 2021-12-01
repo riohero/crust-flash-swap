@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   swftApiUrl: '',
   skipToAddressCheck: true,
+  checkIp: false,
 };
 
 /*

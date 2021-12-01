@@ -1,99 +1,101 @@
-<div class="f-row hr">
-  <div class="header">
-    <div>Quickly Get CRU <a class="link-primary swft-link" href="https://www.swft.pro/" target="_blank">Powered By
-        SWFT</a></div>
-    <div class="account" *ngIf="isConnected()" [ngbTooltip]="getConnectedAddress()" placement="bottom">
-      <img class="wallet-name" src="/assets/metamask.svg">
-      <div ngbDropdown class="wallet-address">
-        <a [routerLink]="" (click)="showOrderHistory()">{{getShortAddress()}}</a>
+<div class="swap-ui">
+  <div class="f-row hr">
+    <div class="header">
+      <div>Quickly Get CRU <a class="link-primary swft-link" href="https://www.swft.pro/" target="_blank">Powered By
+          SWFT</a></div>
+      <div class="account" *ngIf="isConnected()" [ngbTooltip]="getConnectedAddress()" placement="bottom">
+        <img class="wallet-name" src="/assets/metamask.svg">
+        <div ngbDropdown class="wallet-address">
+          <a [routerLink]="" (click)="showOrderHistory()">{{getShortAddress()}}</a>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div class="f-row">
-  <div class="content">
-    <label for="swap-from-amount" class="input-label">From</label>
-    <div class="f-row">
-      <div class="input-group">
-        <input id="swap-from-amount" [formControl]="fromAmount" type="number" class="form-control"
-          aria-label="From Amount" placeholder="0" [class.is-invalid]="errors.fromAmount">
-        <div ngbDropdown class="input-group-append asset-dropdown">
-          <a [routerLink]="" class="btn btn-outline-primary selected-asset" id="fromTokenDropDown" ngbDropdownToggle>
-            <img [src]="getImageUrl(selectedAsset)" class="asset-icon">
-            <span class="asset-name"> {{selectedAsset?.symbol}}</span>
-          </a>
-          <div ngbDropdownMenu class="dropdown-menu asset-list">
-            <a *ngFor="let a of fromCoinList" class="dropdown-item" [routerLink]="" (click)="selectItem(a)">
-              <img [src]="getImageUrl(a)" class="asset-icon">
-              {{a.symbol}}</a>
+  <div class="f-row">
+    <div class="content">
+      <label for="swap-from-amount" class="input-label">From</label>
+      <div class="f-row">
+        <div class="input-group">
+          <input id="swap-from-amount" [formControl]="fromAmount" type="number" class="form-control"
+            aria-label="From Amount" placeholder="0" [class.is-invalid]="errors.fromAmount">
+          <div ngbDropdown class="input-group-append asset-dropdown">
+            <a [routerLink]="" class="btn btn-outline-primary selected-asset" id="fromTokenDropDown" ngbDropdownToggle>
+              <img [src]="getImageUrl(selectedAsset)" class="asset-icon">
+              <span class="asset-name"> {{selectedAsset?.symbol}}</span>
+            </a>
+            <div ngbDropdownMenu class="dropdown-menu asset-list">
+              <a *ngFor="let a of fromCoinList" class="dropdown-item" [routerLink]="" (click)="selectItem(a)">
+                <img [src]="getImageUrl(a)" class="asset-icon">
+                {{a.symbol}}</a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <label for="swap-to-amount" class="input-label to-label">To</label>
-    <div class="f-row">
-      <div class="input-group">
-        <input id="swap-to-amount" [disabled]="true" type="number" class="form-control" aria-label="To Amount"
-          placeholder="0" [value]='toAmount'>
-        <div ngbDropdown class="input-group-append asset-dropdown">
-          <a [routerLink]="" class="btn btn-outline-primary disabled selected-asset" id="toTokenDropDown"
-            ngbDropdownToggle>
-            <img [src]="getImageUrl(cru)" class="asset-icon">
-            <span class="asset-name"> {{cru.symbol}}</span>
-          </a>
+      <label for="swap-to-amount" class="input-label to-label">To</label>
+      <div class="f-row">
+        <div class="input-group">
+          <input id="swap-to-amount" [disabled]="true" type="number" class="form-control" aria-label="To Amount"
+            placeholder="0" [value]='toAmount'>
+          <div ngbDropdown class="input-group-append asset-dropdown">
+            <a [routerLink]="" class="btn btn-outline-primary disabled selected-asset" id="toTokenDropDown"
+              ngbDropdownToggle>
+              <img [src]="getImageUrl(cru)" class="asset-icon">
+              <span class="asset-name"> {{cru.symbol}}</span>
+            </a>
+          </div>
         </div>
       </div>
+      <label class="lbl-mainnet" for="cruAddress"> Crust Mainnet Address (Receiving CRU) </label>
+      <div class="f-row receiving-info">
+        <div class="f-row">
+          <input type="text" class="form-control to-address" id="cruAddress" [formControl]="toAddress"
+            aria-describedby="crust address" placeholder="Please enter the receiving address"
+            [class.is-invalid]="errors.toAddress">
+        </div>
+        <div class="f-row price-info">
+          <label class="price-label">Price:</label>
+          <label class="price" *ngIf="priceInfo">
+            {{priceInfo!.instantRate | number:'1.1-6' }} {{simplified(cru.symbol)}}
+          </label>
+          <label class="price" *ngIf="!priceInfo">
+            <i class="loading" src="/assets/spinner-1s.svg"></i>
+            {{simplified(cru.symbol)}}
+          </label>
+        </div>
+        <div class="f-row price-info fee-info">
+          <label class="price-label">Fee:</label>
+          <label class="price" *ngIf="priceInfo">{{priceInfo!.depositCoinFeeRate | percent:'1.1-6'}}（in
+            {{simplified(selectedAsset.symbol)
+            }}）</label>
+          <label class="price" *ngIf="!priceInfo">
+            <i class="loading" src="/assets/spinner-1s.svg"></i>
+            （in {{simplified(selectedAsset.symbol) }}）</label>
+          <label class="price-label">Receive Fee:</label>
+          <label class="price" *ngIf="priceInfo">{{priceInfo!.receiveCoinFee | number:'1.1-6'}}（in
+            {{simplified(cru.symbol)}}）</label>
+          <label class="price" *ngIf="!priceInfo">
+            <i class="loading" src="/assets/spinner-1s.svg"></i>
+            （in {{simplified(cru.symbol)}}）</label>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-connect" *ngIf="!isConnected()" (click)="connectWallet()">Connect
+        MetaMask</button>
+      <button class="btn btn-primary btn-connect" *ngIf="isConnected()" (click)="doSwap()"
+        [disabled]="!this.priceInfo || swapInProgress">
+        {{getSwapButtonText()}}
+      </button>
     </div>
-    <label class="lbl-mainnet" for="cruAddress"> Crust Mainnet Address (Receiving CRU) </label>
-    <div class="f-row receiving-info">
-      <div class="f-row">
-        <input type="text" class="form-control to-address" id="cruAddress" [formControl]="toAddress"
-          aria-describedby="crust address" placeholder="Please enter the receiving address"
-          [class.is-invalid]="errors.toAddress">
-      </div>
-      <div class="f-row price-info">
-        <label class="price-label">Price:</label>
-        <label class="price" *ngIf="priceInfo">
-          {{priceInfo!.instantRate | number:'1.1-6' }} {{simplified(cru.symbol)}}
-        </label>
-        <label class="price" *ngIf="!priceInfo">
-          <i class="loading" src="/assets/spinner-1s.svg"></i>
-          {{simplified(cru.symbol)}}
-        </label>
-      </div>
-      <div class="f-row price-info fee-info">
-        <label class="price-label">Fee:</label>
-        <label class="price" *ngIf="priceInfo">{{priceInfo!.depositCoinFeeRate | percent:'1.1-6'}}（in
-          {{simplified(selectedAsset.symbol)
-          }}）</label>
-        <label class="price" *ngIf="!priceInfo">
-          <i class="loading" src="/assets/spinner-1s.svg"></i>
-          （in {{simplified(selectedAsset.symbol) }}）</label>
-        <label class="price-label">Receive Fee:</label>
-        <label class="price" *ngIf="priceInfo">{{priceInfo!.receiveCoinFee | number:'1.1-6'}}（in
-          {{simplified(cru.symbol)}}）</label>
-        <label class="price" *ngIf="!priceInfo">
-          <i class="loading" src="/assets/spinner-1s.svg"></i>
-          （in {{simplified(cru.symbol)}}）</label>
-      </div>
-    </div>
-    <button class="btn btn-primary btn-connect" *ngIf="!isConnected()" (click)="connectWallet()">Connect
-      MetaMask</button>
-    <button class="btn btn-primary btn-connect" *ngIf="isConnected()" (click)="doSwap()"
-      [disabled]="!this.priceInfo || swapInProgress">
-      {{getSwapButtonText()}}
-    </button>
   </div>
-</div>
-<div class="f-row footer">
-  <div class="footer-content">
-    Trade on Markets:
-    <div class="markets">
-      <a class="market" *ngFor="let market of markets" [href]="market.url" target="_blank">
-        <img class="market-icon" [src]="market.imageUrl">
-        <span class="market-name">{{market.name}}</span>
-      </a>
+  <div class="f-row footer">
+    <div class="footer-content">
+      Trade on Markets:
+      <div class="markets">
+        <a class="market" *ngFor="let market of markets" [href]="market.url" target="_blank">
+          <img class="market-icon" [src]="market.imageUrl">
+          <span class="market-name">{{market.name}}</span>
+        </a>
+      </div>
     </div>
   </div>
 </div>

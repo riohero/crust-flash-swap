@@ -10,9 +10,11 @@ import { FlashSwapComponent } from './flash-swap/flash-swap.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { OrderHistoryComponent } from './order-history/order-history.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { ServiceUnavailableComponent } from './service-unavailable/service-unavailable.component';
 
 @NgModule({
-  declarations: [AppComponent, FlashSwapComponent, OrderHistoryComponent],
+  declarations: [AppComponent, FlashSwapComponent, OrderHistoryComponent, PageNotFoundComponent, ServiceUnavailableComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

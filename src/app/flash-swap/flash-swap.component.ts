@@ -7,6 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as _ from 'lodash';
 import { ToastrService } from 'ngx-toastr';
@@ -24,6 +25,7 @@ import {
 import { environment } from 'src/environments/environment';
 import { ERC20__factory } from 'src/typechain/factories/ERC20__factory';
 import { AppStateService } from '../app-state.service';
+import { GeoLocationService } from '../geo-location.service';
 import { KeyringService } from '../keyring.service';
 import { OrderHistoryService } from '../order-history.service';
 import { OrderHistoryComponent } from '../order-history/order-history.component';
@@ -132,10 +134,28 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
     private appState: AppStateService,
     private toast: ToastrService,
     private orderHistoryService: OrderHistoryService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private geoLocation: GeoLocationService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+    if (environment.checkIp) {
+      this.geoLocation.getClientGeoInfo().subscribe(
+        (result) => {
+          if (
+            result.country_code3 === 'CHN' ||
+            result.country_code3 === 'USA'
+          ) {
+            this.router.navigate(['/unavaliable']);
+          }
+        },
+        (e) => {
+          console.log('failed fetch geo location', e);
+          this.router.navigate(['/unavaliable']);
+        }
+      );
+    }
     const subAccount$ = this.wallet.getAccountObs().subscribe(
       (accts) => {
         this.account = _.isEmpty(accts) ? null : accts[0];
