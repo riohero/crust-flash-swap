@@ -7,6 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as _ from 'lodash';
 import { ToastrService } from 'ngx-toastr';
 import { from, Observable, Subject, Subscription, timer } from 'rxjs';
@@ -24,6 +25,8 @@ import { environment } from 'src/environments/environment';
 import { ERC20__factory } from 'src/typechain/factories/ERC20__factory';
 import { AppStateService } from '../app-state.service';
 import { KeyringService } from '../keyring.service';
+import { OrderHistoryService } from '../order-history.service';
+import { OrderHistoryComponent } from '../order-history/order-history.component';
 import { SwftService } from '../swft.service';
 import { WalletService } from '../wallet.service';
 
@@ -127,7 +130,9 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
     private swft: SwftService,
     private keyring: KeyringService,
     private appState: AppStateService,
-    private toast: ToastrService
+    private toast: ToastrService,
+    private orderHistoryService: OrderHistoryService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -379,6 +384,7 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
               {
                 success: false,
                 reason: 'ui-changed',
+                code: '0',
               },
             ]);
           }
@@ -388,6 +394,14 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
               orderResult.platformAddr,
               Number(orderResult.depositCoinAmt)
             )
+          ).pipe(
+            map((v) => {
+              return {
+                success: true,
+                code: '0',
+                order: orderResult,
+              };
+            })
           );
         })
       )
@@ -401,6 +415,16 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
                 `Failed to create an order, the error code is: ${r.code}`
               );
             }
+            return;
+          }
+          this.toast.info('Transaction sent, please wait for settlement.');
+          if ('order' in r) {
+            this.orderHistoryService.addOrder({
+              orderId: r.order.orderId,
+              fromToken: r.order.depositCoinCode,
+              toToken: r.order.receiveCoinCode,
+              amount: Number(r.order.depositCoinAmt),
+            });
           }
         },
         (e: any) => {
@@ -432,5 +456,12 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
       return 'Swapping...';
     }
     return 'Swap';
+  }
+
+  public showOrderHistory() {
+    console.log('show history...');
+    const modalRef = this.modalService.open(OrderHistoryComponent, {
+      size: 'lg',
+    });
   }
 }

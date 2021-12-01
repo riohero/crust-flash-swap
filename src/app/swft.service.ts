@@ -79,4 +79,15 @@ export class SwftService {
   ): Observable<SwftResponse<CreateOrderResult>> {
     return this.request<CreateOrderResult>('api/v2/accountExchange', payload);
   }
+
+  public getOrderStatus(
+    deviceId: string,
+    orderId: string
+  ): Observable<SwftResponse<OrderResult>> {
+    return this.request<OrderResult>('api/v2/queryOrderState', {
+      equipmentNo: deviceId,
+      orderId,
+      sourceType: 'H5',
+    });
+  }
 }

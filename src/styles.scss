@@ -53,3 +53,15 @@ body {
     background-size: 20px 20px;
   }
 }
+
+.modal-content {
+  border-radius: 16px;
+  .modal-title {
+    font-size: 18px;
+  }
+
+  button:focus-visible,
+  button:focus {
+    outline: none;
+  }
+}

@@ -59,6 +59,7 @@ type OrderStatus =
   | 'wait_exchange_push'
   | 'wait_exchange_return'
   | 'wait_receive_send'
+  | 'receive_complete'
   | 'wait_refund_send'
   | 'error'
   | 'ERROR'
@@ -70,6 +71,7 @@ interface CreateOrderResult {
   dealFinishTime: string | null;
   depositCoinAmt: string;
   depositCoinCode: string;
+  receiveCoinCode: string;
   platformAddr: string; // send asset to this address
   detailState: OrderStatus;
 }
@@ -78,4 +80,11 @@ interface OrderResult extends CreateOrderResult {
   transactionId: string;
   refundDepositTxid: string;
   refundCoinAmt: string;
+}
+
+interface LocalOrderInfo {
+  orderId: string;
+  fromToken: string;
+  toToken: string;
+  amount: number;
 }

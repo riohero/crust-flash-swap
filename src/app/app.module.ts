@@ -9,9 +9,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FlashSwapComponent } from './flash-swap/flash-swap.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
+import { OrderHistoryComponent } from './order-history/order-history.component';
 
 @NgModule({
-  declarations: [AppComponent, FlashSwapComponent],
+  declarations: [AppComponent, FlashSwapComponent, OrderHistoryComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

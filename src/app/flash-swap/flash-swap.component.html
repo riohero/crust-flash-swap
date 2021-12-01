@@ -4,7 +4,9 @@
         SWFT</a></div>
     <div class="account" *ngIf="isConnected()" [ngbTooltip]="getConnectedAddress()" placement="bottom">
       <img class="wallet-name" src="/assets/metamask.svg">
-      <span class="wallet-address">{{getShortAddress()}}</span>
+      <div ngbDropdown class="wallet-address">
+        <a [routerLink]="" (click)="showOrderHistory()">{{getShortAddress()}}</a>
+      </div>
     </div>
   </div>
 </div>
