@@ -20,11 +20,14 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { ERC20__factory } from 'src/typechain/factories/ERC20__factory';
 import { AppStateService } from '../app-state.service';
 import { KeyringService } from '../keyring.service';
 import { SwftService } from '../swft.service';
 import { WalletService } from '../wallet.service';
+
+const AnyReceiveAddress = environment.skipToAddressCheck;
 
 const defaultAssets: CryptoAsset[] = [
   {
@@ -39,9 +42,17 @@ const CRU: CryptoAsset = {
   symbol: 'USDT(ERC20)',
   network: 'ETH',
   // chainId: 0,
-  contract: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+  contract: '',
   decimal: 6,
 };
+
+// const CRU: CryptoAsset = {
+//   symbol: 'CRU',
+//   network: 'CRU',
+//   // chainId: 0,
+//   contract: '',
+//   decimal: 12,
+// };
 
 const TradeMarkets: Market[] = [
   {
@@ -319,18 +330,14 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
             this.priceInfo.depositMin
           } - ${this.priceInfo.depositMax} ${this.simplified(
             this.selectedAsset.symbol
-          )}`,
-          'Invalid amount'
+          )}`
         );
       }
       return;
     }
     if (!this.toAddress.value || !this.isToAddressValid(this.toAddress.value)) {
       this.errors['toAddress'] = true;
-      this.toast.warning(
-        'Please enter a valid receiving address',
-        'Receiving Address Required'
-      );
+      this.toast.warning('Please enter a valid receiving address');
     }
     if (!this.priceInfo) {
       this.errors['price'] = true;
@@ -362,6 +369,7 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
               {
                 success: false,
                 reason: 'failed',
+                code: v.resCode,
               },
             ]);
           }
@@ -387,6 +395,13 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
       .subscribe(
         (r) => {
           console.log('result: ', r);
+          if (r && !r.success) {
+            if (r.code) {
+              this.toast.error(
+                `Failed to create an order, the error code is: ${r.code}`
+              );
+            }
+          }
         },
         (e: any) => {
           if (e.code === -32000) {
@@ -402,6 +417,9 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
   }
 
   private isToAddressValid(addr: string): boolean {
+    if (AnyReceiveAddress) {
+      return true;
+    }
     return this.keyring.isAddressValid(addr);
   }
 

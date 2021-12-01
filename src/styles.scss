@@ -6,17 +6,50 @@ $primary: #ff8d00;
 @import "~bootstrap/scss/bootstrap";
 
 body {
-  background: rgba(0, 0, 0, 0.5);
+  background: radial-gradient(
+      177.96% 999.06% at 50% -921.67%,
+      #ff8d00 0%,
+      #fdfcfa 100%
+    )
+    no-repeat;
 }
 
 @import "~ngx-toastr/toastr-bs4-alert";
 
 .toast-container {
+  margin-top: 1em;
   .ngx-toastr {
     width: 350px !important;
+    padding-left: 48px;
+    background-color: white;
+    border: 1px solid #eeeeee;
+    box-sizing: border-box;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
 
     .toast-message {
       width: 300px !important;
+      font-family: PingFang HK;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 16px;
+      color: #666666;
     }
+  }
+
+  .alert-warn {
+    background-image: url("/assets/warn.svg");
+    background-size: 20px 20px;
+  }
+
+  .alert-info {
+    background-image: url("/assets/info.svg");
+    background-size: 20px 20px;
+  }
+
+  .alert-error {
+    background-image: url("/assets/error.svg");
+    background-size: 20px 20px;
   }
 }

@@ -23,6 +23,11 @@ import { ToastrModule } from 'ngx-toastr';
       positionClass: 'toast-top-center',
       preventDuplicates: true,
       timeOut: 5000,
+      iconClasses: {
+        warning: 'alert-warn',
+        info: 'alert-info',
+        error: 'alert-error',
+      },
     }),
   ],
   providers: [],
