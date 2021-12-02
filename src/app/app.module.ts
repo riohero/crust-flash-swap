@@ -5,7 +5,12 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbDropdownModule,
+  NgbModalModule,
+  NgbModule,
+  NgbTooltipModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { FlashSwapComponent } from './flash-swap/flash-swap.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
@@ -14,11 +19,20 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { ServiceUnavailableComponent } from './service-unavailable/service-unavailable.component';
 
 @NgModule({
-  declarations: [AppComponent, FlashSwapComponent, OrderHistoryComponent, PageNotFoundComponent, ServiceUnavailableComponent],
+  declarations: [
+    AppComponent,
+    FlashSwapComponent,
+    OrderHistoryComponent,
+    PageNotFoundComponent,
+    ServiceUnavailableComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    NgbTooltipModule,
+    NgbModalModule,
+    NgbDropdownModule,
     NgbModule,
     HttpClientModule,
     ReactiveFormsModule,
