@@ -17,6 +17,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { OrderHistoryComponent } from './order-history/order-history.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ServiceUnavailableComponent } from './service-unavailable/service-unavailable.component';
+import { HeaderComponent } from './header/header.component';
+import { AccountStatusComponent } from './account-status/account-status.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,8 @@ import { ServiceUnavailableComponent } from './service-unavailable/service-unava
     OrderHistoryComponent,
     PageNotFoundComponent,
     ServiceUnavailableComponent,
+    HeaderComponent,
+    AccountStatusComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,7 +37,6 @@ import { ServiceUnavailableComponent } from './service-unavailable/service-unava
     NgbTooltipModule,
     NgbModalModule,
     NgbDropdownModule,
-    NgbModule,
     HttpClientModule,
     ReactiveFormsModule,
     ToastrModule.forRoot({

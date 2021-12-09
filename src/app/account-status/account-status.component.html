@@ -1,0 +1,10 @@
+<div class="account">
+  <img class="wallet-name" src="/assets/metamask.svg">
+  <div ngbDropdown class="wallet-address">
+    <a [routerLink]="" id="accountDropDownList" ngbDropdownToggle>{{getShortAddress()}}</a>
+    <div ngbDropdownMenu aria-labelledby="accountDropDownList" class="actions-dropdown">
+      <button ngbDropdownItem (click)="showOrderHistory()">Swap History</button>
+      <button ngbDropdownItem (click)="logout()">Disconnect</button>
+    </div>
+  </div>
+</div>

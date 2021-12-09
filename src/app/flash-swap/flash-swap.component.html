@@ -3,12 +3,6 @@
     <div class="header">
       <div>Quickly Get CRU <a class="link-primary swft-link" href="https://www.swft.pro/" target="_blank">Powered By
           SWFT</a></div>
-      <div class="account" *ngIf="isConnected()" [ngbTooltip]="getConnectedAddress()" placement="bottom">
-        <img class="wallet-name" src="/assets/metamask.svg">
-        <div ngbDropdown class="wallet-address">
-          <a [routerLink]="" (click)="showOrderHistory()">{{getShortAddress()}}</a>
-        </div>
-      </div>
     </div>
   </div>
   <div class="f-row">
