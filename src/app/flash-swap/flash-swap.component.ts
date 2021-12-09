@@ -348,6 +348,8 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
     this.errors = {};
     if (!this.fromAmount.value || this.fromAmount.value <= 0) {
       this.errors['fromAmount'] = true;
+      this.toast.error('Please enter a valid amount');
+      return;
     } else if (!this.isValidAmount(this.fromAmount.value)) {
       if (this.priceInfo) {
         this.toast.error(
