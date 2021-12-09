@@ -6,16 +6,27 @@
   line-height: 25px;
   align-items: center;
 
-  img {
-    margin-bottom: 1px;
+  a.address {
+    color: black;
+    font-family: Open Sans;
   }
   .wallet-name {
-    width: 18px;
-    height: 18px;
-    margin-right: 0.3em;
+    width: 28px;
+    height: 28px;
   }
 }
 
 .actions-menu {
   z-index: 5000;
+}
+
+.wallet-wrapper {
+  width: 36px;
+  height: 36px;
+  background: url("/assets/wallet-wrapper-bg.svg");
+  background-size: cover;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.5em;
 }

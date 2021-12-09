@@ -6,6 +6,7 @@ $primary: #ff8d00;
 @import "~bootstrap/scss/bootstrap";
 
 body {
+  height: 100vh;
   background: radial-gradient(
       177.96% 999.06% at 50% -921.67%,
       #ff8d00 0%,
