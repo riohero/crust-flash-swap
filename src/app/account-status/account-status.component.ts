@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import _ from 'lodash';
 import { Subscription } from 'rxjs';
+import { AppStateService } from '../app-state.service';
 import { OrderHistoryComponent } from '../order-history/order-history.component';
 import { WalletService } from '../wallet.service';
 
@@ -15,7 +16,11 @@ export class AccountStatusComponent implements OnInit, OnDestroy {
   subs$: Subscription[] = [];
   showTooltip = false;
 
-  constructor(private wallet: WalletService, private modalService: NgbModal) {}
+  constructor(
+    private appState: AppStateService,
+    private wallet: WalletService,
+    private modalService: NgbModal
+  ) {}
 
   ngOnInit(): void {
     const subAccount$ = this.wallet.getAccountObs().subscribe(
@@ -56,6 +61,6 @@ export class AccountStatusComponent implements OnInit, OnDestroy {
   }
 
   public logout() {
-    console.log('logout');
+    this.appState.logout();
   }
 }

@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { BigNumber } from 'bignumber.js';
 import { ethers } from 'ethers';
 import * as _ from 'lodash';
-import { from, interval, Observable } from 'rxjs';
+import { from, interval, observable, Observable } from 'rxjs';
 import { filter, finalize, share, switchMap } from 'rxjs/operators';
 import { ERC20__factory } from 'src/typechain/factories/ERC20__factory';
+import { AppStateService, LoginMethod } from './app-state.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,12 +15,23 @@ export class WalletService {
   provider: ethers.providers.Web3Provider;
   pendingCommands = false;
 
-  constructor() {
+  constructor(private appState: AppStateService) {
     // eslint-disable-next-line
     this.provider = new ethers.providers.Web3Provider((window as any).ethereum);
-    this.accounts$ = interval(500).pipe(
+    const metaMaskAccounts = interval(500).pipe(
       filter(() => !this.pendingCommands), // skip update when there're pending commands
-      switchMap(() => from(this.provider.listAccounts().catch((e) => []))),
+      switchMap(() => from(this.provider.listAccounts().catch((e) => [])))
+    );
+
+    this.accounts$ = appState.getLoginMethodOb().pipe(
+      switchMap((v) => {
+        if (v === LoginMethod.MetaMask) {
+          return metaMaskAccounts;
+        }
+        // todo: support more wallets here
+
+        return from([[]]);
+      }),
       share()
     );
   }
@@ -34,9 +46,10 @@ export class WalletService {
   }
 
   public connectWallet(): Observable<void> {
-    return this.commuteWithEthers(() =>
-      this.provider.send('eth_requestAccounts', [])
-    );
+    return this.commuteWithEthers(() => {
+      this.appState.setLoginMethod(LoginMethod.MetaMask);
+      return this.provider.send('eth_requestAccounts', []);
+    });
   }
 
   public composeSend(
