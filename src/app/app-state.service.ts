@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import _ from 'lodash';
 import { interval, Observable, Subject, Subscription } from 'rxjs';
-import { distinctUntilChanged, map, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, share, tap } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 
 const KeySwftUUID = 'key-swft-uuid';
@@ -63,6 +63,8 @@ export class AppStateService {
   }
 
   public getLoginMethodOb(): Observable<LoginMethod> {
-    return this.loginMethodSubject$.asObservable().pipe(distinctUntilChanged());
+    return this.loginMethodSubject$
+      .asObservable()
+      .pipe(distinctUntilChanged(), share());
   }
 }

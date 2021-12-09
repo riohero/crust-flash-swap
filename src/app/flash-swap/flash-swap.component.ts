@@ -9,7 +9,9 @@ import {
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ethers } from 'ethers';
 import * as _ from 'lodash';
+import { add } from 'lodash';
 import { ToastrService } from 'ngx-toastr';
 import { from, Observable, Subject, Subscription, timer } from 'rxjs';
 import {
@@ -32,7 +34,20 @@ import { OrderHistoryComponent } from '../order-history/order-history.component'
 import { SwftService } from '../swft.service';
 import { WalletService } from '../wallet.service';
 
-const AnyReceiveAddress = environment.skipToAddressCheck;
+interface NewtorkInfo {
+  chainId: number;
+  network: Network;
+}
+const SupportedNetworks: NewtorkInfo[] = [
+  {
+    chainId: 1,
+    network: 'ETH',
+  },
+  {
+    chainId: 56,
+    network: 'BSC',
+  },
+];
 
 const defaultAssets: CryptoAsset[] = [
   {
@@ -104,11 +119,13 @@ const TradeMarkets: Market[] = [
 })
 export class FlashSwapComponent implements OnInit, OnDestroy {
   markets = TradeMarkets;
+  supportedNetworkMap: { [key: string]: NewtorkInfo } = {};
 
   selectedAsset: CryptoAsset = defaultAssets[0];
   cru = CRU;
   account: string | null = null;
   allCoinList: CoinInfo[] = [];
+  chainId = 0;
   fromCoinList: CryptoAsset[] = defaultAssets;
 
   coinListLoadStatus: CoinListStatus = 'loading';
@@ -137,7 +154,9 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private geoLocation: GeoLocationService,
     private router: Router
-  ) {}
+  ) {
+    this.supportedNetworkMap = _.keyBy(SupportedNetworks, (v) => v.chainId);
+  }
 
   ngOnInit(): void {
     if (environment.checkIp) {
@@ -172,7 +191,6 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
         if (v > 0) {
           this.errors = _.omit(this.errors, 'fromAmount');
         }
-        console.log('v ', v);
         this.fromAmountSubject$.next(v);
       });
     this.subs$.push(subFromAmount$);
@@ -184,30 +202,7 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
           return;
         }
         this.coinListLoadStatus = 'loaded';
-        this.allCoinList = result.data;
-        this.fromCoinList = _.chain(this.allCoinList)
-          .filter((c) => {
-            const currentCoinCode = this.cru.symbol;
-            const unsupported =
-              _.findIndex(c.noSupportCoin.split(','), currentCoinCode) >= 0;
-            return !unsupported;
-          })
-          .map((v) => {
-            if (v.mainNetwork !== 'ETH') {
-              return null;
-            }
-            return {
-              symbol: v.coinCode,
-              network: v.mainNetwork,
-              contract: v.contact || '',
-              decimal: v.coinDecimal,
-            };
-          })
-          .filter()
-          .sortBy((v) => v?.symbol)
-          .value() as CryptoAsset[];
-        const eth = _.find(this.fromCoinList, (c) => c.symbol === 'ETH');
-        this.selectItem(eth ? eth : this.fromCoinList[0]);
+        this.updateCoinList(result.data);
       },
       () => {
         this.coinListLoadStatus = 'error';
@@ -286,6 +281,17 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
       );
     this.subs$.push(subSelectedAsset$);
 
+    const subChainId = this.wallet.getChainIdObs().subscribe(
+      (id) => {
+        this.chainId = id;
+        this.updateCoinList(this.allCoinList);
+      },
+      (e) => {
+        console.log('error updating chain id', e);
+      }
+    );
+    this.subs$.push(subChainId);
+
     this.selectAssetSubject$.next(this.selectedAsset);
     this.fromAmountSubject$.next(0);
   }
@@ -304,6 +310,39 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
 
   public isConnected(): boolean {
     return this.account !== null && this.account.length > 0;
+  }
+
+  private updateCoinList(coinList: CoinInfo[]) {
+    this.allCoinList = coinList;
+    this.fromCoinList = _.chain(this.allCoinList)
+      .filter((c) => {
+        const currentCoinCode = this.cru.symbol;
+        const unsupported =
+          _.findIndex(c.noSupportCoin.split(','), currentCoinCode) >= 0;
+        return !unsupported;
+      })
+      .map((v) => {
+        const network = _.get(this.supportedNetworkMap, this.chainId);
+        if (!network) {
+          return null;
+        }
+        if (v.mainNetwork !== network.network) {
+          return null;
+        }
+        return {
+          symbol: v.coinCode,
+          network: v.mainNetwork,
+          contract: v.contact || '',
+          decimal: v.coinDecimal,
+        };
+      })
+      .filter()
+      .sortBy((v) => v?.symbol)
+      .value() as CryptoAsset[];
+    const eth = _.find(this.fromCoinList, (c) => c.symbol === 'ETH');
+    if (!_.isEmpty(this.fromCoinList)) {
+      this.selectItem(eth ? eth : this.fromCoinList[0]);
+    }
   }
 
   public getConnectedAddress(): string | null {
@@ -463,8 +502,8 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
   }
 
   private isToAddressValid(addr: string): boolean {
-    if (AnyReceiveAddress) {
-      return true;
+    if (this.selectedAsset.network === 'ETH') {
+      return !_.isEmpty(ethers.utils.getAddress(addr));
     }
     return this.keyring.isAddressValid(addr);
   }
@@ -484,5 +523,9 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(OrderHistoryComponent, {
       size: 'lg',
     });
+  }
+
+  public isNetworkSupported(): boolean {
+    return _.has(this.supportedNetworkMap, this.chainId);
   }
 }

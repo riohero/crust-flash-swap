@@ -75,10 +75,14 @@
       </div>
       <button class="btn btn-primary btn-connect" *ngIf="!isConnected()" (click)="connectWallet()">Connect
         MetaMask</button>
-      <button class="btn btn-primary btn-connect" *ngIf="isConnected()" (click)="doSwap()"
+      <button class="btn btn-primary btn-connect" *ngIf="isConnected() && isNetworkSupported()" (click)="doSwap()"
         [disabled]="!this.priceInfo || swapInProgress">
         {{getSwapButtonText()}}
       </button>
+      <button class="btn btn-primary btn-connect" *ngIf="isConnected() && !isNetworkSupported()" disabled>
+        Wrong Network
+      </button>
+
     </div>
   </div>
   <div class="f-row footer">

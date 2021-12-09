@@ -1,19 +1,28 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BigNumber } from 'bignumber.js';
 import { ethers } from 'ethers';
 import * as _ from 'lodash';
-import { from, interval, observable, Observable } from 'rxjs';
-import { filter, finalize, share, switchMap } from 'rxjs/operators';
+import { from, interval, observable, Observable, Subscription } from 'rxjs';
+import {
+  distinctUntilChanged,
+  filter,
+  finalize,
+  share,
+  switchMap,
+} from 'rxjs/operators';
 import { ERC20__factory } from 'src/typechain/factories/ERC20__factory';
 import { AppStateService, LoginMethod } from './app-state.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class WalletService {
+export class WalletService implements OnDestroy {
   accounts$: Observable<string[]>;
+  chainId$: Observable<number>;
   provider: ethers.providers.Web3Provider;
   pendingCommands = false;
+
+  subs$: Subscription[] = [];
 
   constructor(private appState: AppStateService) {
     // eslint-disable-next-line
@@ -21,6 +30,13 @@ export class WalletService {
     const metaMaskAccounts = interval(500).pipe(
       filter(() => !this.pendingCommands), // skip update when there're pending commands
       switchMap(() => from(this.provider.listAccounts().catch((e) => [])))
+    );
+
+    const metamaskChainIds = interval(500).pipe(
+      filter(() => !this.pendingCommands), // skip update when there're pending commands
+      switchMap(() => {
+        return from([_.parseInt((window as any).ethereum.networkVersion)]);
+      })
     );
 
     this.accounts$ = appState.getLoginMethodOb().pipe(
@@ -34,10 +50,45 @@ export class WalletService {
       }),
       share()
     );
+
+    this.chainId$ = appState.getLoginMethodOb().pipe(
+      switchMap((v) => {
+        if (v === LoginMethod.MetaMask) {
+          return metamaskChainIds;
+        }
+        return from([0]);
+      }),
+      distinctUntilChanged(),
+      share()
+    );
+
+    const updateProvider = this.chainId$.subscribe(
+      (v) => {
+        console.log('recreating provider');
+        // eslint-disable-next-line
+        this.provider = new ethers.providers.Web3Provider(
+          (window as any).ethereum
+        );
+      },
+      (e) => {
+        console.log('error updating provider', e);
+      }
+    );
+    this.subs$.push(updateProvider);
+  }
+  ngOnDestroy(): void {
+    for (const s of this.subs$) {
+      s.unsubscribe();
+    }
+    this.subs$ = [];
   }
 
   public getAccountObs(): Observable<string[]> {
     return this.accounts$;
+  }
+
+  public getChainIdObs(): Observable<number> {
+    return this.chainId$;
   }
 
   private commuteWithEthers<T>(f: () => Promise<T>) {
