@@ -503,7 +503,11 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
 
   private isToAddressValid(addr: string): boolean {
     if (this.selectedAsset.network === 'ETH') {
-      return !_.isEmpty(ethers.utils.getAddress(addr));
+      try {
+        return !_.isEmpty(ethers.utils.getAddress(addr));
+      } catch (e) {
+        return false;
+      }
     }
     return this.keyring.isAddressValid(addr);
   }
