@@ -23,7 +23,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist/crust-flash-swap
-          cname: swap.crust.run
+          cname: swap.crustapps.net
 
       - name: Pin to IPFS
         id: upload
