@@ -58,21 +58,21 @@ const defaultAssets: CryptoAsset[] = [
   },
 ];
 
-const CRU: CryptoAsset = {
-  symbol: 'USDT(ERC20)',
-  network: 'ETH',
-  // chainId: 0,
-  contract: '',
-  decimal: 6,
-};
-
 // const CRU: CryptoAsset = {
-//   symbol: 'CRU',
-//   network: 'CRU',
+//   symbol: 'USDT(ERC20)',
+//   network: 'ETH',
 //   // chainId: 0,
 //   contract: '',
-//   decimal: 12,
+//   decimal: 6,
 // };
+
+const CRU: CryptoAsset = {
+  symbol: 'CRU',
+  network: 'CRU',
+  // chainId: 0,
+  contract: '',
+  decimal: 12,
+};
 
 const TradeMarkets: Market[] = [
   {
