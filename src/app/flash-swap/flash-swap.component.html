@@ -7,7 +7,10 @@
   </div>
   <div class="f-row">
     <div class="content">
-      <label for="swap-from-amount" class="input-label">From</label>
+      <div class="f-row from-label-row">
+        <label for="swap-from-amount" class="input-label">From</label>
+        <label class="input-label network-hint">Currently Supports Ethereum and BSC networks.</label>
+      </div>
       <div class="f-row">
         <div class="input-group">
           <input id="swap-from-amount" [formControl]="fromAmount" type="number" class="form-control"
