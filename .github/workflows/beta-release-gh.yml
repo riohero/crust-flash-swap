@@ -1,0 +1,26 @@
+name: Beta Release to Github Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    if: github.repository == 'maxmuncy/crust-flash-swap'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: volta-cli/action@v1
+      - name: Build
+        run: |
+          npm install
+          npx ng build
+
+      - name: Deploy Gh-Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist/crust-flash-swap
+          cname: swap.decoo.cloud
