@@ -86,6 +86,11 @@ const TradeMarkets: Market[] = [
     url: 'https://app.uniswap.com',
   },
   {
+    name: 'Cruswap',
+    imageUrl: '/assets/Cruswap.svg',
+    url: 'https://csm.crust.network/#/swap',
+  },
+  {
     name: 'Gateio',
     imageUrl: '/assets/gateio.svg',
     url: 'https://www.gate.io',
