@@ -110,6 +110,10 @@
   }
 }
 
+.swap-to-token-dropdown-toggle::after {
+  border-top: 0;
+}
+
 .asset-list {
   min-width: 10em;
   max-height: 300px;
