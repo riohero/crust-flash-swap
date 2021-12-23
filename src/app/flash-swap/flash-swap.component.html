@@ -35,7 +35,7 @@
           <input id="swap-to-amount" [disabled]="true" type="number" class="form-control" aria-label="To Amount"
             placeholder="0" [value]='toAmount'>
           <div ngbDropdown class="input-group-append asset-dropdown">
-            <a [routerLink]="" class="btn btn-outline-primary disabled selected-asset" id="toTokenDropDown"
+            <a [routerLink]="" class="btn btn-outline-primary disabled selected-asset swap-to-token-dropdown-toggle" id="toTokenDropDown"
               ngbDropdownToggle>
               <img [src]="getImageUrl(cru)" class="asset-icon">
               <span class="asset-name"> {{cru.symbol}}</span>
