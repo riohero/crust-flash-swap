@@ -51,13 +51,16 @@
             [class.is-invalid]="errors.toAddress">
         </div>
         <div class="f-row price-info">
-          <label class="price-label">Price:</label>
-          <label class="price" *ngIf="priceInfo">
-            {{priceInfo!.instantRate | number:'1.1-6' }} {{simplified(cru.symbol)}}
+          <label class="price-label">Exchange Rate:</label>
+          <label class="price" *ngIf="priceInfo && !showReversePrice">
+            1 {{simplified(selectedAsset.symbol)}}={{priceInfo!.instantRate | number:'1.1-6' }} {{simplified(cru.symbol)}}
           </label>
+          <label class="price" *ngIf="reversePriceInfo && showReversePrice">
+            1 {{simplified(cru.symbol)}}={{reversePriceInfo!.instantRate | number:'1.1-6' }} {{simplified(selectedAsset.symbol)}}
+          </label>
+          <span class="cru-fo-repeat btn-swith-price" *ngIf="priceInfo && reversePriceInfo" (click)="togglePriceDirection()"></span>
           <label class="price" *ngIf="!priceInfo">
             <i class="loading" src="/assets/spinner-1s.svg"></i>
-            {{simplified(cru.symbol)}}
           </label>
         </div>
         <div class="f-row price-info fee-info">

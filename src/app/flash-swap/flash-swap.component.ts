@@ -1,3 +1,4 @@
+import { ThisReceiver } from '@angular/compiler';
 import {
   Component,
   EventEmitter,
@@ -13,7 +14,7 @@ import { ethers } from 'ethers';
 import * as _ from 'lodash';
 import { add } from 'lodash';
 import { ToastrService } from 'ngx-toastr';
-import { from, Observable, Subject, Subscription, timer } from 'rxjs';
+import { from, Observable, Subject, Subscription, timer, zip } from 'rxjs';
 import {
   combineLatest,
   debounceTime,
@@ -143,6 +144,8 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
   errors: { [k: string]: boolean } = {};
 
   priceInfo?: NormalizedPriceInfo;
+  reversePriceInfo?: NormalizedPriceInfo;
+  showReversePrice = false;
   loadPriceError = false;
 
   subs$: Subscription[] = [];
@@ -241,24 +244,26 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
       .pipe(
         tap(() => (this.loadPriceError = false)),
         switchMap(([[assetSelected, fromAmount]]) => {
-          return this.swft
-            .getPriceInfo(assetSelected, this.cru)
+          return zip(
+              this.swft.getPriceInfo(assetSelected, this.cru),
+              this.swft.getPriceInfo(this.cru, assetSelected)
+            )
             .pipe(
               map(
-                (v) =>
-                  [v, fromAmount] as [SwftResponse<PriceInfo>, number | null]
+                ([v1, v2]) => [v1, v2, fromAmount] as [SwftResponse<PriceInfo>, SwftResponse<PriceInfo>, number | null]
               )
             );
         })
       )
       .subscribe(
-        ([result, fromAmount]) => {
-          if (result.resCode !== '800') {
+        ([result1, result2, fromAmount]) => {
+          if (result1.resCode !== '800' || result2.resCode !== '800') {
             this.loadPriceError = true;
             return;
           }
           this.loadPriceError = false;
-          this.priceInfo = this.swft.normalziePriceInfo(result.data);
+          this.priceInfo = this.swft.normalziePriceInfo(result1.data);
+          this.reversePriceInfo = this.swft.normalziePriceInfo(result2.data);
           this.toAmount = this.swft.getReturnAmount(
             fromAmount || 0,
             this.priceInfo!
@@ -281,6 +286,8 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.priceInfo = undefined;
+          this.reversePriceInfo = undefined;
+          this.showReversePrice = false;
         },
         () => {}
       );
@@ -315,6 +322,10 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
 
   public isConnected(): boolean {
     return this.account !== null && this.account.length > 0;
+  }
+
+  public togglePriceDirection() {
+    this.showReversePrice = !this.showReversePrice;
   }
 
   private updateCoinList(coinList: CoinInfo[]) {
