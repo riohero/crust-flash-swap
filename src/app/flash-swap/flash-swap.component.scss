@@ -164,6 +164,7 @@
 .footer {
   .footer-content {
     display: flex;
+    flex-direction: row;
     align-items: center;
     flex: 0 0 100%;
     padding: 1em;
@@ -171,15 +172,13 @@
     font-weight: 500;
     font-size: 18px;
     line-height: 25px;
-    margin-left: 24px;
-    padding-left: 0;
+    margin-left: 5px;
 
     .markets {
       display: flex;
       flex-direction: row;
-      margin-left: 0.5em;
-      margin-right: 1em;
-      justify-content: space-around;
+      margin-left: 1em;
+      justify-content: space-between;
       flex-grow: 1;
 
       .market {
