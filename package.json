@@ -15,6 +15,7 @@
     "@angular/platform-browser": "~12.2.0",
     "@angular/platform-browser-dynamic": "~12.2.0",
     "@angular/router": "~12.2.0",
+    "@decooio/crust-fonts": "^1.1.0",
     "@ng-bootstrap/ng-bootstrap": "^10.0.0",
     "@polkadot/keyring": "^8.0.2",
     "bignumber.js": "^9.0.1",

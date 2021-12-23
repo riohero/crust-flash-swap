@@ -220,6 +220,12 @@
     font-size: 14px;
     line-height: 19px;
 
+    .btn-swith-price {
+      margin-top: 0.4em;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
     &.fee-info {
       margin-top: 0;
     }
