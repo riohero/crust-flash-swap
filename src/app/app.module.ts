@@ -19,6 +19,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { ServiceUnavailableComponent } from './service-unavailable/service-unavailable.component';
 import { HeaderComponent } from './header/header.component';
 import { AccountStatusComponent } from './account-status/account-status.component';
+import { SelectTokenComponent } from './select-token/select-token.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { AccountStatusComponent } from './account-status/account-status.componen
     ServiceUnavailableComponent,
     HeaderComponent,
     AccountStatusComponent,
+    SelectTokenComponent,
   ],
   imports: [
     BrowserModule,

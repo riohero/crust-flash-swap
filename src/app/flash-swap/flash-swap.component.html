@@ -11,38 +11,31 @@
         <label for="swap-from-amount" class="input-label">From</label>
         <label class="input-label network-hint">Currently Supports Ethereum and BSC networks.</label>
       </div>
-      <div class="f-row">
-        <div class="input-group">
-          <input id="swap-from-amount" [formControl]="fromAmount" type="number" class="form-control"
+      <div class="token-row">
+        <input id="swap-from-amount" [formControl]="fromAmount" type="number" class="token-amount-input"
             aria-label="From Amount" placeholder="0" [class.is-invalid]="errors.fromAmount">
-          <div ngbDropdown class="input-group-append asset-dropdown">
-            <a [routerLink]="" class="btn btn-outline-primary selected-asset" id="fromTokenDropDown" ngbDropdownToggle>
-              <img [src]="getImageUrl(selectedAsset)" class="asset-icon">
-              <span class="asset-name"> {{selectedAsset?.symbol}}</span>
-            </a>
-            <div ngbDropdownMenu class="dropdown-menu asset-list">
-              <a *ngFor="let a of fromCoinList" class="dropdown-item" [routerLink]="" (click)="selectItem(a)">
-                <img [src]="getImageUrl(a)" class="asset-icon">
-                {{a.symbol}}</a>
-            </div>
+        <div class="token-symbol-contanier" (click)="showSelectTokenModal()">
+          <div class="token-symbol-left">
+            <img [src]="getImageUrl(selectedAsset)" class="token-icon">
+            <span class="token-symbol"> {{selectedAsset?.symbol}}</span>
           </div>
+          <span class="cru-fo-chevron-down token-symbol-down"></span>
         </div>
       </div>
 
       <label for="swap-to-amount" class="input-label to-label">To</label>
-      <div class="f-row">
-        <div class="input-group">
-          <input id="swap-to-amount" [disabled]="true" type="number" class="form-control" aria-label="To Amount"
+      <div class="token-row token-row-disabled">
+        <input id="swap-to-amount" [disabled]="true" type="number" class="token-amount-input" aria-label="To Amount"
             placeholder="0" [value]='toAmount'>
-          <div ngbDropdown class="input-group-append asset-dropdown">
-            <a [routerLink]="" class="btn btn-outline-primary disabled selected-asset swap-to-token-dropdown-toggle" id="toTokenDropDown"
-              ngbDropdownToggle>
-              <img [src]="getImageUrl(cru)" class="asset-icon">
-              <span class="asset-name"> {{cru.symbol}}</span>
-            </a>
+        <div class="token-symbol-contanier">
+          <div class="token-symbol-left">
+            <img [src]="getImageUrl(cru)" class="token-icon">
+            <span class="token-symbol"> {{cru.symbol}}</span>
           </div>
+          <!-- <span class="cru-fo-chevron-down token-symbol-down"></span> -->
         </div>
       </div>
+
       <label class="lbl-mainnet" for="cruAddress"> Crust Mainnet Address (Receiving CRU) </label>
       <div class="f-row receiving-info">
         <div class="f-row">
