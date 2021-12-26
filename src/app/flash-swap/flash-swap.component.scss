@@ -230,13 +230,41 @@
   }
 }
 
-.lbl-mainnet {
+.div-mainnet-address-container {
   margin-top: 2em;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 16px;
-  line-height: 22px;
+  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .lbl-mainnet {
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  .div-get-wallet-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    .span-get-wallet {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      color: #666666;
+    }
+
+    .a-wallet-link {
+      margin-left: 0.25rem;
+      margin-right: 0.05rem;
+      text-decoration: underline;
+    }
+  }
 }
 
 .to-address {
