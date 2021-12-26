@@ -3,11 +3,11 @@
   max-width: 15em;
   font-size: 18px;
   font-weight: normal;
-  line-height: 25px;
   align-items: center;
+  color: #333333;
 
   a.address {
-    color: black;
+    color: #333333;
     font-family: Open Sans;
   }
   .wallet-name {
@@ -21,8 +21,8 @@
 }
 
 .wallet-wrapper {
-  width: 36px;
-  height: 36px;
+  width: 48px;
+  height: 48px;
   background: url("/assets/wallet-wrapper-bg.svg");
   background-size: cover;
   display: inline-flex;
