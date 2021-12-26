@@ -233,7 +233,7 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
         this.chainId = id;
         const network = _.get(SupportedNetworkMap, this.chainId);
         if (network) {
-          this.selectedAsset = network.defaultAsset;
+          this.selectItem(network.defaultAsset);
         }
       },
       (e) => {
@@ -256,6 +256,8 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
     this.selectedAsset = item;
     this.selectAssetSubject$.next(item);
     // this.itemSelected.emit(item);
+    this.fromAmount.setValue(0);
+    this.toAmount = 0;
   }
 
   public isConnected(): boolean {
