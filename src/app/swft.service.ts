@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
-import { filter } from 'lodash';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { environment } from './../environments/environment';
 
 const SwftBase = environment.swftApiUrl;
