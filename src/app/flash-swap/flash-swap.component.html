@@ -32,11 +32,18 @@
             <img [src]="getImageUrl(cru)" class="token-icon">
             <span class="token-symbol"> {{cru.symbol}}</span>
           </div>
-          <!-- <span class="cru-fo-chevron-down token-symbol-down"></span> -->
+          <span class="cru-fo-chevron-down token-symbol-down" style="visibility:hidden"></span>
         </div>
       </div>
 
-      <label class="lbl-mainnet" for="cruAddress"> Crust Mainnet Address (Receiving CRU) </label>
+      <div class="div-mainnet-address-container">
+        <span class="lbl-mainnet" for="cruAddress"> Crust Mainnet Address (Receiving CRU) </span>
+        <div class="div-get-wallet-container">
+          <span class="span-get-wallet" >Get a Crust Wallet</span>
+          <a class="span-get-wallet a-wallet-link" href="https://chrome.google.com/webstore/detail/crust-wallet/jccapkebeeiajkkdemacblkjhhhboiek" target="_blank">here</a>
+          <span class="span-get-wallet" >!</span>
+        </div>
+      </div>
       <div class="f-row receiving-info">
         <div class="f-row">
           <input type="text" class="form-control to-address" id="cruAddress" [formControl]="toAddress"
