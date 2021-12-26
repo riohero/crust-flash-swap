@@ -20,6 +20,11 @@ body {
 
 @import "@decooio/crust-fonts/style.css";
 
+@font-face {
+  font-family: Open Sans;
+  src: url("/assets/fonts/OpenSans-Regular.ttf") format("truetype");
+}
+
 .toast-container {
   margin-top: 1em;
   .ngx-toastr {

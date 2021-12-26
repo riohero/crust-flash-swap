@@ -3,7 +3,6 @@
   flex-direction: column;
   align-items: center;
 
-  // background: #f1f1f1;
   border-radius: 8px;
   align-items: flex-start;
   flex-direction: row;
@@ -16,7 +15,6 @@
   flex-direction: column;
   align-items: center;
 
-  // background: #f1f1f1;
   border-radius: 8px;
   align-items: flex-start;
   flex-direction: row;
@@ -29,6 +27,7 @@
 }
 
 .token-row {
+  margin-top: 5px;
   height: 72px;
   background: #FFFFFF;
   border: 1px solid #EEEEEE;
@@ -134,15 +133,15 @@
   flex-grow: 1;
   justify-content: space-between;
   font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 25px;
+  font-weight: 600;
+  font-size: 20px;
   margin: 24px;
   margin-bottom: 0px;
 
   .swft-link {
-    padding-left: 0.5em;
-    font-weight: normal;
+    padding-left: 0.3em;
+    text-decoration: underline;
+    font-weight: 500;
   }
 
   .account {
@@ -190,7 +189,6 @@
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
-  line-height: 19px;
   color: #666666;
 }
 
@@ -231,7 +229,7 @@
 }
 
 .div-mainnet-address-container {
-  margin-top: 2em;
+  margin-top: 2.5em;
   margin-bottom: 0.5rem;
   display: flex;
   flex-direction: row;
@@ -291,6 +289,7 @@
 }
 
 .footer {
+  margin-top: 30px;
   .footer-content {
     display: flex;
     flex-direction: row;
@@ -345,9 +344,8 @@
   flex-direction: column;
 
   .price-info {
-    margin-top: 1em;
+    margin-top: 1.5em;
     font-size: 14px;
-    line-height: 19px;
 
     .btn-swith-price {
       margin-top: 0.4em;
