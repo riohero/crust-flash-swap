@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/co
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ethers } from 'ethers';
 import * as _ from 'lodash';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription, fromEvent } from 'rxjs';
 import {
   debounceTime,
@@ -44,7 +45,8 @@ export class SelectTokenComponent implements OnInit, OnDestroy {
   constructor(
     private wallet: WalletService,
     private swft: SwftService,
-    public activeModal: NgbActiveModal
+    public activeModal: NgbActiveModal,
+    private toast: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -63,13 +65,16 @@ export class SelectTokenComponent implements OnInit, OnDestroy {
       (result) => {
         if (result.resCode !== '800') {
           this.coinListLoadStatus = 'error';
+          this.toast.error('Error loading coin list from SWFT. Please try again later.');
           return;
         }
         this.coinListLoadStatus = 'loaded';
         this.updateCoinList(result.data);
+        // this.toast.info('Finish loading coin list');
       },
       () => {
         this.coinListLoadStatus = 'error';
+        this.toast.error('Error loading coin list from SWFT. Please try again later.');
       }
     );
     this.subs$.push(subCoinList$);
