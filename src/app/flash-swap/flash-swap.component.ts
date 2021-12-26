@@ -6,7 +6,6 @@ import {
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ethers } from 'ethers';
 import * as _ from 'lodash';
 import { ToastrService } from 'ngx-toastr';
 import { from, Subject, Subscription, timer, zip } from 'rxjs';
@@ -31,16 +30,7 @@ import { SelectTokenComponent } from '../select-token/select-token.component';
 import { SwftService } from '../swft.service';
 import { WalletService } from '../wallet.service';
 
-
-const defaultAssets: CryptoAsset[] = [
-  {
-    symbol: 'ETH',
-    // chainId: 1,
-    network: 'ETH',
-    decimal: 18,
-  },
-];
-
+const defaultChainId = 1;
 
 const TradeMarkets: Market[] = [
   {
@@ -92,16 +82,10 @@ const TradeMarkets: Market[] = [
 })
 export class FlashSwapComponent implements OnInit, OnDestroy {
   markets = TradeMarkets;
-  // supportedNetworkMap: { [key: string]: NetworkInfo } = {};
-
-  selectedAsset: CryptoAsset = defaultAssets[0];
+  selectedAsset: CryptoAsset = _.get(SupportedNetworkMap, defaultChainId).defaultAsset;
   cru = CRU;
   account: string | null = null;
-  allCoinList: CoinInfo[] = [];
-  chainId = 0;
-  fromCoinList: CryptoAsset[] = defaultAssets;
-
-  coinListLoadStatus: CoinListStatus = 'loading';
+  chainId = defaultChainId;
 
   fromAmount = new FormControl('');
   toAddress = new FormControl('');
@@ -130,7 +114,7 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
     private geoLocation: GeoLocationService,
     private router: Router
   ) {
-    // this.supportedNetworkMap = _.keyBy(SupportedNetworks, (v) => v.chainId);
+
   }
 
   ngOnInit(): void {
@@ -169,22 +153,6 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
         this.fromAmountSubject$.next(v);
       });
     this.subs$.push(subFromAmount$);
-
-    const subCoinList$ = this.swft.getCoinList().subscribe(
-      (result) => {
-        if (result.resCode !== '800') {
-          this.coinListLoadStatus = 'error';
-          return;
-        }
-        this.coinListLoadStatus = 'loaded';
-        this.updateCoinList(result.data);
-      },
-      () => {
-        this.coinListLoadStatus = 'error';
-      }
-    );
-
-    this.subs$.push(subCoinList$);
 
     const subAddr$ = this.toAddress.valueChanges
       .pipe(distinctUntilChanged(), debounceTime(50))
@@ -263,7 +231,10 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
     const subChainId = this.wallet.getChainIdObs().subscribe(
       (id) => {
         this.chainId = id;
-        this.updateCoinList(this.allCoinList);
+        const network = _.get(SupportedNetworkMap, this.chainId);
+        if (network) {
+          this.selectedAsset = network.defaultAsset;
+        }
       },
       (e) => {
         console.log('error updating chain id', e);
@@ -293,39 +264,6 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
 
   public togglePriceDirection() {
     this.showReversePrice = !this.showReversePrice;
-  }
-
-  private updateCoinList(coinList: CoinInfo[]) {
-    this.allCoinList = coinList;
-    this.fromCoinList = _.chain(this.allCoinList)
-      .filter((c) => {
-        const currentCoinCode = this.cru.symbol;
-        const unsupported =
-          _.findIndex(c.noSupportCoin.split(','), currentCoinCode) >= 0;
-        return !unsupported;
-      })
-      .map((v) => {
-        const network = _.get(SupportedNetworkMap, this.chainId);
-        if (!network) {
-          return null;
-        }
-        if (v.mainNetwork !== network.network) {
-          return null;
-        }
-        return {
-          symbol: v.coinCode,
-          network: v.mainNetwork,
-          contract: v.contact || '',
-          decimal: v.coinDecimal,
-        };
-      })
-      .filter()
-      .sortBy((v) => v?.symbol)
-      .value() as CryptoAsset[];
-    const eth = _.find(this.fromCoinList, (c) => c.symbol === 'ETH');
-    if (!_.isEmpty(this.fromCoinList)) {
-      this.selectItem(eth ? eth : this.fromCoinList[0]);
-    }
   }
 
   public getConnectedAddress(): string | null {

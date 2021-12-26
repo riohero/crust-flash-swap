@@ -1,14 +1,12 @@
-import { ThisReceiver, ThrowStmt } from '@angular/compiler';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BigNumber } from 'bignumber.js';
 import { ethers } from 'ethers';
 import * as _ from 'lodash';
-import { from, interval, observable, Observable, Subscription, BehaviorSubject } from 'rxjs';
+import { from, interval, Observable, Subscription, BehaviorSubject } from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
   finalize,
-  share,
   switchMap,
 } from 'rxjs/operators';
 import { ERC20__factory } from 'src/typechain/factories/ERC20__factory';
