@@ -1,8 +1,9 @@
+import { ThisReceiver, ThrowStmt } from '@angular/compiler';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BigNumber } from 'bignumber.js';
 import { ethers } from 'ethers';
 import * as _ from 'lodash';
-import { from, interval, observable, Observable, Subscription } from 'rxjs';
+import { from, interval, observable, Observable, Subscription, BehaviorSubject } from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
@@ -17,7 +18,7 @@ import { AppStateService, LoginMethod } from './app-state.service';
   providedIn: 'root',
 })
 export class WalletService implements OnDestroy {
-  accounts$: Observable<string[]>;
+  accounts$: BehaviorSubject<string[]>;
   chainId$: Observable<number>;
   provider: ethers.providers.Web3Provider;
   pendingCommands = false;
@@ -39,7 +40,8 @@ export class WalletService implements OnDestroy {
       })
     );
 
-    this.accounts$ = appState.getLoginMethodOb().pipe(
+    const accountsSubject = new BehaviorSubject<string[]>([]);
+    appState.getLoginMethodOb().pipe(
       switchMap((v) => {
         if (v === LoginMethod.MetaMask) {
           return metaMaskAccounts;
@@ -48,19 +50,23 @@ export class WalletService implements OnDestroy {
 
         return from([[]]);
       }),
-      share()
-    );
+      // share()
+    )
+    .subscribe(accountsSubject);
+    this.accounts$ = accountsSubject;
 
-    this.chainId$ = appState.getLoginMethodOb().pipe(
+    const chainIdSubject = new BehaviorSubject<number>(0);
+    appState.getLoginMethodOb().pipe(
       switchMap((v) => {
         if (v === LoginMethod.MetaMask) {
           return metamaskChainIds;
         }
         return from([0]);
       }),
-      distinctUntilChanged(),
-      share()
-    );
+      distinctUntilChanged()
+    )
+    .subscribe(chainIdSubject);
+    this.chainId$ =  chainIdSubject;
 
     const updateProvider = this.chainId$.subscribe(
       (v) => {
@@ -83,7 +89,37 @@ export class WalletService implements OnDestroy {
     this.subs$ = [];
   }
 
-  public getAccountObs(): Observable<string[]> {
+  public getBalance(address: string): Promise<ethers.BigNumber> {
+    return this.provider.getBalance(address);
+  }
+
+  public getContractCoinBalance(accountAddress: string, contractAddress: string): Promise<ethers.BigNumber> {
+    const contractAbiFragment = [
+      {
+        name: 'balanceOf',
+        type: 'function',
+        inputs: [
+          {
+            name: '_owner',
+            type: 'address',
+          },
+        ],
+        outputs: [
+          {
+            name: 'balance',
+            type: 'uint256',
+          },
+        ],
+        constant: true,
+        payable: false,
+      },
+    ];
+
+    const contract = new ethers.Contract(contractAddress, contractAbiFragment, this.provider);
+    return contract.balanceOf(accountAddress);
+  }
+
+  public getAccountObs(): BehaviorSubject<string[]> {
     return this.accounts$;
   }
 

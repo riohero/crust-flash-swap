@@ -1,0 +1,137 @@
+.modal-body {
+  padding-left: 0;
+  padding-right: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  .input-search {
+    height: 58px;
+    border: 1px solid #666666;
+    box-sizing: border-box;
+    border-radius: 12px;
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    align-self: stretch;
+    margin-left: 0.9rem;
+    margin-right: 1rem;
+  }
+
+  .label-most-used {
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    color: #333333;
+    margin-top: 1rem;
+    margin-left: 1em;
+  }
+
+  .div-most-used-container {
+    min-height: 10px;
+    margin-left: 0.8rem;
+    margin-right: 1rem;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .div-most-used-token {
+      border: 1px solid #EEEEEE;
+      box-sizing: border-box;
+      border-radius: 8px;
+      padding: 0.5rem;
+      padding-top: 0.3rem;
+      padding-bottom: 0.3rem;
+      margin-right: 0.5rem;
+      margin-top: 0.3rem;
+      margin-bottom: 0.3rem;
+      min-width: 100px;
+
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+
+      cursor: pointer;
+      &:hover {
+        background: #F7F7F7;
+      }
+    }
+  }
+
+  .div-token-list-top-separator {
+    align-self: stretch;
+    border-bottom: 1px solid #dee2e6;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .div-token-list {
+    align-self: stretch;
+
+    height: 300px;
+    overflow: scroll;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+
+    .div-token-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+
+      cursor: pointer;
+      &:hover {
+        background: #F7F7F7;
+      }
+
+      .div-token-row-left {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+      }
+
+      .span-token-amount {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 14px;
+        color: #000000;
+      }
+    }
+
+  }
+
+  .img-token-img {
+    width: 30px;
+    height: 30px;
+    margin-right: 0.6rem;
+  }
+
+  .span-token-symbol {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+  }
+
+
+  // .div-modal-body-loading {
+  //   display: inline-block;
+  //   width: 18px;
+  //   height: 18px;
+  //   background-image: url("/assets/spinner-1s.svg");
+  //   background-size: cover;
+  // }
+
+}

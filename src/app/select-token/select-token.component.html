@@ -1,0 +1,27 @@
+<div class="modal-header">
+  <h4 class="modal-title">Select a token</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <input #searchTokenInput type="text" class="input-search" autocomplete="off" placeholder="Search name or paste address" >
+  <label class="label-most-used">Most Used</label>
+  <div class="div-most-used-container">
+    <div *ngFor="let token of mostUsedCoinList" class="div-most-used-token" (click)="selectToken(token)">
+      <img [src]="getImageUrl(token)" class="img-token-img">
+      <span class="span-token-symbol">{{token.symbol}}</span>
+    </div>
+  </div>
+  <div class="div-token-list-top-separator"></div>
+  <div class="div-token-list">
+    <div *ngFor="let token of filteredCoinList" class="div-token-row" (click)="selectToken(token)">
+      <div class="div-token-row-left">
+        <img [src]="getImageUrl(token)" class="img-token-img">
+        <span class="span-token-symbol">{{token.symbol}}</span>
+      </div>
+      <span class="span-token-amount">{{token.balance}}</span>
+    </div>
+  </div>
+  <!-- <div id="div-modal-body-loading"></div> -->
+</div>

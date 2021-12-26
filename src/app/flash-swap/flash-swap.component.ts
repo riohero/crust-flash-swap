@@ -1,20 +1,15 @@
-import { ThisReceiver } from '@angular/compiler';
 import {
   Component,
-  EventEmitter,
-  Input,
   OnDestroy,
   OnInit,
-  Output,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ethers } from 'ethers';
 import * as _ from 'lodash';
-import { add } from 'lodash';
 import { ToastrService } from 'ngx-toastr';
-import { from, Observable, Subject, Subscription, timer, zip } from 'rxjs';
+import { from, Subject, Subscription, timer, zip } from 'rxjs';
 import {
   combineLatest,
   debounceTime,
@@ -26,29 +21,16 @@ import {
   tap,
 } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { ERC20__factory } from 'src/typechain/factories/ERC20__factory';
+import { SupportedNetworkMap, CRU } from '../constants';
 import { AppStateService } from '../app-state.service';
 import { GeoLocationService } from '../geo-location.service';
 import { KeyringService } from '../keyring.service';
 import { OrderHistoryService } from '../order-history.service';
 import { OrderHistoryComponent } from '../order-history/order-history.component';
+import { SelectTokenComponent } from '../select-token/select-token.component';
 import { SwftService } from '../swft.service';
 import { WalletService } from '../wallet.service';
 
-interface NewtorkInfo {
-  chainId: number;
-  network: Network;
-}
-const SupportedNetworks: NewtorkInfo[] = [
-  {
-    chainId: 1,
-    network: 'ETH',
-  },
-  {
-    chainId: 56,
-    network: 'BSC',
-  },
-];
 
 const defaultAssets: CryptoAsset[] = [
   {
@@ -59,21 +41,6 @@ const defaultAssets: CryptoAsset[] = [
   },
 ];
 
-// const CRU: CryptoAsset = {
-//   symbol: 'USDT(ERC20)',
-//   network: 'ETH',
-//   // chainId: 0,
-//   contract: '',
-//   decimal: 6,
-// };
-
-const CRU: CryptoAsset = {
-  symbol: 'CRU',
-  network: 'CRU',
-  // chainId: 0,
-  contract: '',
-  decimal: 12,
-};
 
 const TradeMarkets: Market[] = [
   {
@@ -125,7 +92,7 @@ const TradeMarkets: Market[] = [
 })
 export class FlashSwapComponent implements OnInit, OnDestroy {
   markets = TradeMarkets;
-  supportedNetworkMap: { [key: string]: NewtorkInfo } = {};
+  // supportedNetworkMap: { [key: string]: NetworkInfo } = {};
 
   selectedAsset: CryptoAsset = defaultAssets[0];
   cru = CRU;
@@ -163,7 +130,7 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
     private geoLocation: GeoLocationService,
     private router: Router
   ) {
-    this.supportedNetworkMap = _.keyBy(SupportedNetworks, (v) => v.chainId);
+    // this.supportedNetworkMap = _.keyBy(SupportedNetworks, (v) => v.chainId);
   }
 
   ngOnInit(): void {
@@ -338,7 +305,7 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
         return !unsupported;
       })
       .map((v) => {
-        const network = _.get(this.supportedNetworkMap, this.chainId);
+        const network = _.get(SupportedNetworkMap, this.chainId);
         if (!network) {
           return null;
         }
@@ -518,13 +485,6 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
   }
 
   private isToAddressValid(addr: string): boolean {
-    if (this.selectedAsset.network === 'ETH') {
-      try {
-        return !_.isEmpty(ethers.utils.getAddress(addr));
-      } catch (e) {
-        return false;
-      }
-    }
     return this.keyring.isAddressValid(addr);
   }
 
@@ -540,12 +500,22 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
   }
 
   public showOrderHistory() {
-    const modalRef = this.modalService.open(OrderHistoryComponent, {
+    this.modalService.open(OrderHistoryComponent, {
       size: 'lg',
     });
   }
 
+  public showSelectTokenModal() {
+    this.modalService.open(SelectTokenComponent, {
+      size: 'md',
+    }).result.then((result) => {
+      this.selectItem(result);
+    }, (reason) => {
+      console.log(`Dismissed ${reason}`);
+    });
+  }
+
   public isNetworkSupported(): boolean {
-    return _.has(this.supportedNetworkMap, this.chainId);
+    return _.has(SupportedNetworkMap, this.chainId);
   }
 }

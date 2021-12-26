@@ -28,6 +28,107 @@
   display: flex;
 }
 
+.token-row {
+  height: 72px;
+  background: #FFFFFF;
+  border: 1px solid #EEEEEE;
+  box-sizing: border-box;
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .token-amount-input {
+    color: #000000;
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 38px;
+    margin-left: 10px;
+    margin-right: 15px;
+    width: 100%;
+    border: none;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    -moz-appearance:textfield;
+
+    &:focus {
+      outline: none !important;
+      border-color: #EEEEEE;
+   }
+  }
+
+  .token-symbol-contanier {
+    margin-right: 12px;
+    height: 48px;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    padding-left: 0.5rem;
+    padding-right: 0.6rem;
+
+    cursor: pointer;
+    &:hover {
+      background: #F7F7F7;
+    }
+
+    .token-symbol-left {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      margin-right: 0.6rem;
+
+      .token-icon {
+        width: 36px;
+        height: 36px;
+        margin-right: 0.6rem;
+      }
+
+      .token-symbol {
+        font-family: Open Sans;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 28px;
+        line-height: 38px;
+        color: #000000;
+      }
+    }
+
+    .token-symbol-down {
+      font-size: 18px;
+    }
+  }
+}
+
+.token-row-disabled {
+  background: #F7F7F7;
+
+  input:disabled {
+    background: #F7F7F7;
+  }
+
+  .token-symbol-contanier {
+    background: #F7F7F7;
+    box-shadow: none;
+    cursor: default;
+  }
+}
+
 .header {
   display: flex;
   flex-grow: 1;
@@ -75,7 +176,7 @@
   border-radius: 8px;
 
   .to-label {
-    margin-top: 1em;
+    margin-top: 1.5em;
   }
 }
 

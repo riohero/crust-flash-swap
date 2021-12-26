@@ -1,4 +1,4 @@
-type SupportedNetwork = 'ETH' | 'CRU';
+type SupportedNetwork = 'ETH' | 'BSC';
 
 interface CryptoAsset {
   symbol: string;
