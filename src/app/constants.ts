@@ -18,7 +18,8 @@ export const SupportedNetworks: NetworkInfo[] = [
     defaultAsset: {
       symbol: 'ETH',
       network: 'ETH',
-      decimal: 18
+      decimal: 18,
+      isNative: true
     }
   },
   {
@@ -29,7 +30,8 @@ export const SupportedNetworks: NetworkInfo[] = [
     defaultAsset: {
       symbol: 'BNB(BSC)',
       network: 'BSC',
-      decimal: 18
+      decimal: 18,
+      isNative: true
     }
   },
 ];
@@ -42,4 +44,5 @@ export const CRU: CryptoAsset = {
   // chainId: 0,
   contract: '',
   decimal: 12,
+  isNative: false
 };

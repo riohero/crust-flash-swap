@@ -1,6 +1,5 @@
 import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ethers } from 'ethers';
 import * as _ from 'lodash';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription, fromEvent } from 'rxjs';
@@ -13,8 +12,7 @@ import { SwftService } from '../swft.service';
 import { WalletService } from '../wallet.service';
 
 interface CryptoAssetWithBalance extends CryptoAsset{
-  balance: string,
-  isNative: boolean
+  balance: string
 }
 
 interface CryptoAssetWithIndex extends CryptoAssetWithBalance{
@@ -139,15 +137,8 @@ export class SelectTokenComponent implements OnInit, OnDestroy {
     const accounts = this.wallet.getAccountObs().getValue();
     if (!_.isEmpty(accounts)) {
       Promise.all(_.map(this.supportedCoinList, async(coin) => {
-        if (coin.isNative) {
-          const balance = await this.wallet.getBalance(accounts[0]);
-          // console.log(`${coin.symbol}, ${coin.contract}: ${balance}`);
-          coin.balance = ethers.utils.formatUnits(balance, coin.decimal);
-        }
-        else if (coin.contract) {
-          const balance = await this.wallet.getContractCoinBalance(accounts[0], coin.contract);
-          coin.balance = ethers.utils.formatUnits(balance, coin.decimal);
-        }
+        const balance = await this.wallet.getCoinBalance(accounts[0], coin);
+        coin.balance = _.toString(balance);
       })).then(() => {
         this.supportedCoinList = this.supportedCoinList.sort((left, right) => {
           const leftBalance = _.toNumber(left.balance);

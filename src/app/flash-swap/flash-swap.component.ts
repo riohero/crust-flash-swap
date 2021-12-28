@@ -303,7 +303,7 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
     return amount >= min && amount <= max;
   }
 
-  public doSwap(): void {
+  public async doSwap(): Promise<void> {
     if (this.swapInProgress) {
       return;
     }
@@ -332,6 +332,12 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
       this.errors['price'] = true;
     }
     if (!_.isEmpty(this.errors) || !this.priceInfo || !this.account) {
+      return;
+    }
+
+    const balance = await this.wallet.getCoinBalance(this.account!, this.selectedAsset);
+    if (this.fromAmount.value > balance) {
+      this.toast.error('Insufficient Balance');
       return;
     }
 

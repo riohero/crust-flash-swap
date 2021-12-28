@@ -6,6 +6,7 @@ interface CryptoAsset {
   // chainId: number;
   contract?: string;
   decimal: number;
+  isNative: boolean;
 }
 
 interface Market {
