@@ -87,34 +87,20 @@ export class WalletService implements OnDestroy {
     this.subs$ = [];
   }
 
-  public getBalance(address: string): Promise<ethers.BigNumber> {
-    return this.provider.getBalance(address);
-  }
-
-  public getContractCoinBalance(accountAddress: string, contractAddress: string): Promise<ethers.BigNumber> {
-    const contractAbiFragment = [
-      {
-        name: 'balanceOf',
-        type: 'function',
-        inputs: [
-          {
-            name: '_owner',
-            type: 'address',
-          },
-        ],
-        outputs: [
-          {
-            name: 'balance',
-            type: 'uint256',
-          },
-        ],
-        constant: true,
-        payable: false,
-      },
-    ];
-
-    const contract = new ethers.Contract(contractAddress, contractAbiFragment, this.provider);
-    return contract.balanceOf(accountAddress);
+  public getCoinBalance(account: string, coin: CryptoAsset): Promise<number> {
+    if (coin.isNative) {
+      return this.provider.getBalance(account)
+        .then((balance) => _.toNumber(ethers.utils.formatUnits(balance, coin.decimal)));
+    }
+    else if (coin.contract) {
+      const contract = ERC20__factory.connect(
+        coin.contract,
+        this.provider.getSigner()
+      );
+      return contract.balanceOf(account)
+        .then((balance) => _.toNumber(ethers.utils.formatUnits(balance, coin.decimal)));
+    }
+    return Promise.resolve(0);
   }
 
   public getAccountObs(): BehaviorSubject<string[]> {
