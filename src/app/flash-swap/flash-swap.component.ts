@@ -256,7 +256,7 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
     this.selectedAsset = item;
     this.selectAssetSubject$.next(item);
     // this.itemSelected.emit(item);
-    this.fromAmount.setValue(0);
+    this.fromAmount.setValue('');
     this.toAmount = 0;
   }
 
