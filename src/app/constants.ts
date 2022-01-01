@@ -48,3 +48,46 @@ export const CRU: CryptoAsset = {
   decimal: 12,
   isNative: false
 };
+
+export const TradeMarkets: Market[] = [
+  {
+    name: 'Houbi',
+    imageUrl: '/assets/ht.svg',
+    url: 'https://www.huobi.com',
+  },
+  {
+    name: 'Uniswap',
+    imageUrl: '/assets/uniswap.svg',
+    url: 'https://app.uniswap.com',
+  },
+  {
+    name: 'Cruswap',
+    imageUrl: '/assets/Cruswap.svg',
+    url: 'https://csm.crust.network/#/swap',
+  },
+  {
+    name: 'Gateio',
+    imageUrl: '/assets/gateio.svg',
+    url: 'https://www.gate.io',
+  },
+  {
+    name: 'ZB.COM',
+    imageUrl: '/assets/zbg.svg',
+    url: 'https://zb.com',
+  },
+  {
+    name: 'Coinone',
+    imageUrl: '/assets/coinone.svg',
+    url: 'https://coinone.co.kr',
+  },
+  {
+    name: 'Hotbit',
+    imageUrl: '/assets/hotbit.svg',
+    url: 'https://hotbit.io',
+  },
+  {
+    name: 'BitMart',
+    imageUrl: '/assets/bitmart.svg',
+    url: 'https://bitmart.com',
+  },
+];
