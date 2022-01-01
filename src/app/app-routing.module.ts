@@ -11,7 +11,7 @@ const routes: Routes = [
   },
   {
     component: ServiceUnavailableComponent,
-    path: 'unavaliable',
+    path: 'unavailable',
   },
   { path: '', redirectTo: '/swap', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent },

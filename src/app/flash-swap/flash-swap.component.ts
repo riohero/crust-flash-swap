@@ -125,12 +125,12 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
             result.country_code3 === 'CHN' ||
             result.country_code3 === 'USA'
           ) {
-            this.router.navigate(['/unavaliable']);
+            this.router.navigate(['/unavailable']);
           }
         },
         (e) => {
           console.log('failed fetch geo location', e);
-          this.router.navigate(['/unavaliable']);
+          this.router.navigate(['/unavailable']);
         }
       );
     }
