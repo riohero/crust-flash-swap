@@ -9,6 +9,8 @@ export interface NetworkInfo {
   defaultAsset: CryptoAsset;
 }
 
+export const DefaultChainId = 1;
+
 export const SupportedNetworks: NetworkInfo[] = [
   {
     chainId: 1,
