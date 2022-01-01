@@ -2,7 +2,91 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 500px;
   min-height: 300px;
-  font-size: 14px;
+
+  .div-no-service {
+    margin-top: 30px;
+    width: 800px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    color: #000000;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    .div-more-info {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+
+      .a-swft-pro {
+        margin-left: 0.25rem;
+        margin-right: 0.05rem;
+        text-decoration: underline;
+        color: #000000;
+      }
+    }
+
+    .div-trade-on-markets {
+      margin-top: 50px;
+      align-self: center;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      flex: 0 0 100%;
+      font-weight: 500;
+      font-size: 18px;
+
+      .span-trade-on-markets {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 27px;
+
+        color: #000000;
+      }
+
+      .div-markets {
+        display: flex;
+        flex-direction: row;
+        margin-left: 1em;
+        justify-content: space-between;
+        flex-grow: 1;
+
+        .a-market {
+          margin-left: 1.5rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          &:hover {
+            filter: invert(0.5) sepia(1) hue-rotate(200deg) saturate(4)
+              brightness(1);
+          }
+
+          .img-market-icon {
+            width: 36px;
+            height: 36px;
+          }
+
+          .span-market-name {
+            color: black;
+            font-size: 10px;
+            line-height: 12px;
+            font-weight: normal;
+            margin-top: 0.3em;
+
+            &:link {
+              text-decoration: none;
+            }
+          }
+        }
+      }
+    }
+
+  }
 }

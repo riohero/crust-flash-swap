@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TradeMarkets } from '../constants';
 
 @Component({
   selector: 'app-service-unavailable',
@@ -6,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./service-unavailable.component.scss'],
 })
 export class ServiceUnavailableComponent {
+  markets = TradeMarkets;
   constructor() {}
 }

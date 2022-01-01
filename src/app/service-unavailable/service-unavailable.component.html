@@ -1,7 +1,20 @@
 <div class="no-service">
-  <img width="200px" height="200px" src="assets/noServe.png" alt="">
-  <p>
-    SWFT 对您当前所在的国家/地区不提供服务
-  </p>
-  <p>SWFT services are currently unavailable in your country/area.</p>
+  <img width="240px" height="193px" src="assets/noServe.png" alt="">
+  <div class="div-no-service">
+    <span>We're sorry, SWFT exchange service is not available in your region. Country domains from United States and Mainland China are not supported according to SWFT's terms of service.</span>
+    <div class="div-more-info">
+      <span>For more detailed information, please refer to</span>
+      <a class="a-swft-pro" href="https://www.swft.pro" target="_blank">SWFT official website</a>
+      <span>.</span>
+    </div>
+    <div class="div-trade-on-markets">
+      <span class="span-trade-on-markets">Trade on Markets:</span>
+      <div class="div-markets">
+        <a class="a-market" *ngFor="let market of markets" [href]="market.url" target="_blank">
+          <img class="img-market-icon" [src]="market.imageUrl">
+          <span class="span-market-name">{{market.name}}</span>
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
