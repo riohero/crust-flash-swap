@@ -7,7 +7,7 @@ import {
   debounceTime,
   distinctUntilChanged,
 } from 'rxjs/operators';
-import { SupportedNetworkMap, CRU } from '../constants';
+import { DefaultChainId, SupportedNetworkMap, CRU } from '../constants';
 import { SwftService } from '../swft.service';
 import { WalletService } from '../wallet.service';
 
@@ -32,7 +32,7 @@ export class SelectTokenComponent implements OnInit, OnDestroy {
   cru = CRU;
 
   coinListLoadStatus: CoinListStatus = 'loading';
-  chainId = 0;
+  chainId = DefaultChainId;
   allCoinList: CoinInfo[] = [];
   mostUsedCoinList: CryptoAssetWithBalance[] = [];
   supportedCoinList: CryptoAssetWithBalance[] = [];
