@@ -100,7 +100,7 @@ export class SelectTokenComponent implements OnInit, OnDestroy {
     this.supportedCoinList = _.chain(this.allCoinList)
       .filter((c) => {
         const currentCoinCode = this.cru.symbol;
-        const unsupported =
+        const unsupported = c.noSupportCoin &&
           _.findIndex(c.noSupportCoin.split(','), currentCoinCode) >= 0;
         return !unsupported;
       })
