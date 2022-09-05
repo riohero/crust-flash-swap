@@ -90,4 +90,9 @@ export const TradeMarkets: Market[] = [
     imageUrl: '/assets/bitmart.svg',
     url: 'https://bitmart.com',
   },
+  {
+    name: 'HyperPay',
+    imageUrl: '/assets/hyperpay.png',
+    url: 'https://www.hyperpay.tech',
+  },
 ];
