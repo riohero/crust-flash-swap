@@ -1,4 +1,4 @@
-type SupportedNetwork = 'ETH' | 'BSC';
+type SupportedNetwork = 'ETH' | 'BSC' | 'OKExChain';
 
 interface CryptoAsset {
   symbol: string;

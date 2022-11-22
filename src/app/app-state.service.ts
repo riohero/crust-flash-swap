@@ -9,6 +9,7 @@ const KeyAppLogInMethod = 'key-app-log-in-method';
 
 export enum LoginMethod {
   MetaMask = 'metamask',
+  Okx = 'Okx',
   NotLogIn = 'not_login',
 }
 

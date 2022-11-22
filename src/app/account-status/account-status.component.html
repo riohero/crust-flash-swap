@@ -1,5 +1,5 @@
 <div class="account">
-  <span class="wallet-wrapper"> <img class="wallet-name" src="/assets/metamask.svg"> </span>
+  <span class="wallet-wrapper"> <img class="wallet-name" [src]="getWalletSrc()"> </span>
   <div ngbDropdown class="wallet-address">
     <a [routerLink]="" id="accountDropDownList" class="address" ngbDropdownToggle>{{getShortAddress()}}</a>
     <div ngbDropdownMenu aria-labelledby="accountDropDownList" class="actions-dropdown">

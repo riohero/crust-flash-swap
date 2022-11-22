@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  swftApiUrl: '',
+  swftApiUrl: 'https://www.swftc.info',
   checkIp: false,
 };
 

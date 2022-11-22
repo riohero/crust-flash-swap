@@ -36,6 +36,18 @@ export const SupportedNetworks: NetworkInfo[] = [
       isNative: true
     }
   },
+  {
+    chainId: 66,
+    network: 'OKExChain',
+    nativeCoin: 'OKT',
+    mostUsedCoins: ['USDT(OKExChain)', 'USDC(OKExChain)', 'ETH(OKExChain)', 'OKB(OKExChain)'],
+    defaultAsset: {
+      symbol: 'OKT',
+      network: 'OKExChain',
+      decimal: 18,
+      isNative: true
+    }
+  },
 ];
 
 export const SupportedNetworkMap = _.keyBy(SupportedNetworks, (v) => v.chainId);
