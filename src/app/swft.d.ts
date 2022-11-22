@@ -5,7 +5,7 @@ interface SwftResponse<T> {
   resMsgEn: string;
 }
 
-type Network = 'ETH' | 'BSC';
+type Network = 'ETH' | 'BSC' | 'OKExChain';
 
 interface CoinInfo {
   coinId: string;

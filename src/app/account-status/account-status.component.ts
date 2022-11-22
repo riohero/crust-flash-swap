@@ -2,9 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import _ from 'lodash';
 import { Subscription } from 'rxjs';
-import { AppStateService } from '../app-state.service';
+import { AppStateService, LoginMethod } from '../app-state.service';
 import { OrderHistoryComponent } from '../order-history/order-history.component';
 import { WalletService } from '../wallet.service';
+import { WALLETS } from '../wallets/wallet';
 
 @Component({
   selector: 'app-account-status',
@@ -23,6 +24,7 @@ export class AccountStatusComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    
     const subAccount$ = this.wallet.getAccountObs().subscribe(
       (accts) => {
         this.account = _.isEmpty(accts) ? null : accts[0];
@@ -62,5 +64,11 @@ export class AccountStatusComponent implements OnInit, OnDestroy {
 
   public logout() {
     this.appState.logout();
+  }
+
+  public getWalletSrc(){
+    const type = this.wallet.wallet?.type || LoginMethod.NotLogIn
+    const w = WALLETS.find(item => item.lm === type)
+    return w?.img || ''
   }
 }

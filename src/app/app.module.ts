@@ -1,3 +1,4 @@
+import { SelectWalletComponent } from './select-wallet/select-wallet.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -31,6 +32,7 @@ import { SelectTokenComponent } from './select-token/select-token.component';
     HeaderComponent,
     AccountStatusComponent,
     SelectTokenComponent,
+    SelectWalletComponent
   ],
   imports: [
     BrowserModule,

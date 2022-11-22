@@ -29,6 +29,7 @@ import { OrderHistoryComponent } from '../order-history/order-history.component'
 import { SelectTokenComponent } from '../select-token/select-token.component';
 import { SwftService } from '../swft.service';
 import { WalletService } from '../wallet.service';
+import { SelectWalletComponent } from '../select-wallet/select-wallet.component';
 
 const defaultChainId = 1;
 
@@ -239,12 +240,13 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
   }
 
   public connectWallet(): void {
-    this.wallet.connectWallet().subscribe(
-      () => {},
-      (e) => {
-        console.log('error connecting to wallet');
-      }
-    );
+    this.modalService.open(SelectWalletComponent,{ size: 'mid', centered: true})
+    // this.wallet.connectWallet().subscribe(
+    //   () => {},
+    //   (e) => {
+    //     console.log('error connecting to wallet');
+    //   }
+    // );
   }
 
   public getImageUrl(a: CryptoAsset): string {
