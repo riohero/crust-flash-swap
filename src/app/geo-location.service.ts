@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-const ApiKey = 'c97f18074f05404a9cdd1b47e549907b';
+const ApiKey = '1ad0fa33fc6a4cb1ad8097eda2baf295';
 
 interface GeoLocaitonResponse {
   ip: string;
