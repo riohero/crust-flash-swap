@@ -63,6 +63,11 @@ export const CRU: CryptoAsset = {
 
 export const TradeMarkets: Market[] = [
   {
+    name: 'MEXC Global',
+    imageUrl: '/assets/mexc.png',
+    url: 'https://www.mexc.com',
+  },
+  {
     name: 'Houbi',
     imageUrl: '/assets/ht.svg',
     url: 'https://www.huobi.com',
