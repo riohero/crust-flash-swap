@@ -98,11 +98,6 @@ export const TradeMarkets: Market[] = [
     url: 'https://coinone.co.kr',
   },
   {
-    name: 'Hotbit',
-    imageUrl: '/assets/hotbit.svg',
-    url: 'https://hotbit.io',
-  },
-  {
     name: 'BitMart',
     imageUrl: '/assets/bitmart.svg',
     url: 'https://bitmart.com',
