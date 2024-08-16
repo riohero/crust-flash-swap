@@ -1,8 +1,4 @@
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -40,7 +36,8 @@ const defaultChainId = 1;
 })
 export class FlashSwapComponent implements OnInit, OnDestroy {
   markets = TradeMarkets;
-  selectedAsset: CryptoAsset = _.get(SupportedNetworkMap, defaultChainId).defaultAsset;
+  selectedAsset: CryptoAsset = _.get(SupportedNetworkMap, defaultChainId)
+    .defaultAsset;
   cru = CRU;
   account: string | null = null;
   chainId = defaultChainId;
@@ -71,17 +68,18 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private geoLocation: GeoLocationService,
     private router: Router
-  ) {
-
-  }
+  ) {}
 
   ngOnInit(): void {
     if (environment.checkIp) {
-      this.geoLocation.getClientGeoInfo().subscribe(
+      this.geoLocation.getClientCountryCode().subscribe(
         (result) => {
+          const code = result.ipResult?.country?.iso_code;
           if (
-            result.country_code3 === 'CHN' ||
-            result.country_code3 === 'USA'
+            code === 'CN' ||
+            code === 'CHN' ||
+            code === 'US' ||
+            code === 'USA'
           ) {
             this.router.navigate(['/unavailable']);
           }
@@ -138,14 +136,18 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
         tap(() => (this.loadPriceError = false)),
         switchMap(([[assetSelected, fromAmount]]) => {
           return zip(
-              this.swft.getPriceInfo(assetSelected, this.cru),
-              this.swft.getPriceInfo(this.cru, assetSelected)
+            this.swft.getPriceInfo(assetSelected, this.cru),
+            this.swft.getPriceInfo(this.cru, assetSelected)
+          ).pipe(
+            map(
+              ([v1, v2]) =>
+                [v1, v2, fromAmount] as [
+                  SwftResponse<PriceInfo>,
+                  SwftResponse<PriceInfo>,
+                  number | null
+                ]
             )
-            .pipe(
-              map(
-                ([v1, v2]) => [v1, v2, fromAmount] as [SwftResponse<PriceInfo>, SwftResponse<PriceInfo>, number | null]
-              )
-            );
+          );
         })
       )
       .subscribe(
@@ -240,7 +242,10 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
   }
 
   public connectWallet(): void {
-    this.modalService.open(SelectWalletComponent,{ size: 'mid', centered: true})
+    this.modalService.open(SelectWalletComponent, {
+      size: 'mid',
+      centered: true,
+    });
     // this.wallet.connectWallet().subscribe(
     //   () => {},
     //   (e) => {
@@ -294,7 +299,10 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const balance = await this.wallet.getCoinBalance(this.account!, this.selectedAsset);
+    const balance = await this.wallet.getCoinBalance(
+      this.account!,
+      this.selectedAsset
+    );
     if (this.fromAmount.value > balance) {
       this.toast.error('Insufficient Balance');
       return;
@@ -411,13 +419,18 @@ export class FlashSwapComponent implements OnInit, OnDestroy {
   }
 
   public showSelectTokenModal() {
-    this.modalService.open(SelectTokenComponent, {
-      size: 'md',
-    }).result.then((result) => {
-      this.selectItem(result);
-    }, (reason) => {
-      console.log(`Dismissed ${reason}`);
-    });
+    this.modalService
+      .open(SelectTokenComponent, {
+        size: 'md',
+      })
+      .result.then(
+        (result) => {
+          this.selectItem(result);
+        },
+        (reason) => {
+          console.log(`Dismissed ${reason}`);
+        }
+      );
   }
 
   public isNetworkSupported(): boolean {
